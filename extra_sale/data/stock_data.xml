@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="stock_customer_transit_locations" model="stock.location">
+            <field name="name">直发区</field>
+            <field name="usage">transit</field>
+            <field name="company_id"></field>
+            <field name="barcode">customer_transit</field>
+        </record>
+
+        <record id="stock_customer_transit_route" model='stock.location.route'>
+            <field name="name">直发路线</field>
+            <field name="sale_selectable" eval="True"></field>
+            <field name="sequence">5</field>
+        </record>
+
+        <record id="seq_picking_type_cutsomer_transit" model="ir.sequence">
+            <field name="name">直发发货序列</field>
+            <field name="prefix">MCOT</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+            <field name="use_date_range" eval="True" />
+        </record>
+
+        <record id="picking_type_customer_transit" model="stock.picking.type">
+            <field name="name">直发发货类型</field>
+            <field name="sequence_id" ref="seq_picking_type_cutsomer_transit"/>
+            <field name="code">outgoing</field>
+            <field name="warehouse_id" eval="False"/>
+            <field name="default_location_src_id" ref="stock_customer_transit_locations"/>
+            <field name="default_location_dest_id" ref="stock.stock_location_customers"/>
+        </record>
+
+        <record id="stock_customer_rule" model="procurement.rule">
+            <field name="name">直发 -> 客户</field>
+            <field name="action">move</field>
+            <field name="location_id" ref="stock.stock_location_customers"/>
+            <field name="location_src_id" ref="stock_customer_transit_locations"/>
+            <field name="procure_method">make_to_order</field>
+            <field name="route_id" ref="stock_customer_transit_route"/>
+            <field name="picking_type_id" ref="picking_type_customer_transit"/>
+            <field name="group_propagation_option">propagate</field>
+            <field name="propagate" eval="False" />
+        </record>
+
+    </data>
+</odoo>

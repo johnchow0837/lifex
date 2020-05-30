@@ -1,0 +1,576 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="extra_sale_order_add_buttons_form" model="ir.ui.view">
+            <field name="name">销售单增加修改价格按钮</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='order_line']/tree" position="inside">
+                    <button name="action_modify_qty_wizard" states="sale" type="object" string="修改数量" />
+                </xpath>
+            </field>
+        </record>
+
+        <record id="extra_account_invoice_addgroups_form" model="ir.ui.view">
+            <field name="name">采购发票增加字段</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="arch" type="xml">
+                <button name="action_invoice_cancel" position="attributes">
+                    <attribute name="groups">account.group_account_invoice,extra_purchase.group_purchase_manager</attribute>
+                </button>
+            </field>
+        </record>
+
+        <record id="extra_stock_move_tree" model="ir.ui.view">
+            <field name="name">库存移动树形添加字段</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='origin']" position="after">
+                    <field name="order_for" />
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="extra_stock_move_form" model="ir.ui.view">
+            <field name="name">库存移动表单添加字段</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='origin']" position="after">
+                    <field name="order_for" />
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="extra_stock_picking_move_tree" model="ir.ui.view">
+            <field name="name">库存移动树形添加字段</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_picking_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='product_uom_qty']" position="after">
+                    <field name="order_for" />
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="extra_stock_quant_form" model="ir.ui.view">
+            <field name="name">份表单添加字段</field>
+            <field name="model">stock.quant</field>
+            <field name="inherit_id" ref="stock.view_stock_quant_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='reservation_id']" position="after">
+                    <field name="order_for" />
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="extra_stock_quant_tree" model="ir.ui.view">
+            <field name="name">份树形添加字段</field>
+            <field name="model">stock.quant</field>
+            <field name="inherit_id" ref="stock.view_stock_quant_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='location_id']" position="after">
+                    <field name="order_for" />
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="extra_purchase_order_tree" model="ir.ui.view">
+            <field name="name">采购树形添加字段</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="shipment_method" />
+                    <field name="partner_shipping_name" />
+                    <field name="partner_shipping_mobile" />
+                    <field name="partner_shipping_phone" />
+                    <field name="partner_shipping_address" />
+                    <field name="supplier_contact" />
+                    <field name="delivery_status" invisible="1"/>
+                    <field name="po_goods_in_status" readonly="1"/>
+                    <field name="po_last_in_datetime" readonly="1"/>
+                    <field name="order_comment" />
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="extra_purchase_order_search" model="ir.ui.view">
+            <field name="name">采购搜索添加字段</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//separator" position="after">
+                    <filter name="customer" string="直发类型" domain="[('shipment_method', '=', 'customer')]"/>
+                    <filter name="warehouse" string="中转类型" domain="[('shipment_method', '=', 'warehouse')]"/>
+                    <filter name="stocking" string="备货类型" domain="[('shipment_method', '=', 'stocking')]"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="extra_purchase_order_form" model="ir.ui.view">
+            <field name="name">采购表单添加字段</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+
+
+                <button name="button_cancel" position="attributes">
+                    <attribute name="confirm">确认取消？</attribute>
+                </button>
+
+                <xpath expr="//field[@name='order_line']/tree" position="attributes">
+                    <attribute name="create">0</attribute>
+                    <attribute name="delete">0</attribute>
+                </xpath>
+<!--                 <xpath expr="//field[@name='order_line']" position="attributes">
+                    <attribute name="attrs">{'readonly': [('state', '!=', 'draft')]}</attribute>
+                </xpath> -->
+
+                <xpath expr="//field[@name='payment_term_id']" position="attributes">
+                    <attribute name="domain">[('payment_type', '=', 'purchase')]</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='order_line']/tree/field[@name='product_id']" position="after">
+                    <field name="cat_no" />
+                    <field name="brand_id" />
+                    <field name="order_for" />
+                </xpath>
+
+            	<xpath expr="//header" position="inside">
+                    <button name="action_to_approve" string="采购提交" states='draft' type="object" groups="extra_purchase.group_purchase_user"/>
+                    <button name="action_reset_to_draft" string="重置为草稿" states='purchase,sent,to approve' type="object" groups="extra_purchase.group_purchase_user"/>
+                    <button name="action_delivery" string="供应商发货" attrs="{'invisible': ['|', ('state', '!=', 'purchase'), ('delivery_status', '=', 'yes')]}" type="object"/>
+                </xpath>
+                <xpath expr="//sheet/group/group/field[@name='partner_id']" position="after">
+                    <field name="supplier_contact" required="1" domain="[('parent_id', '=', partner_id)]"/>
+
+                    <field name="partner_shipping_name" />
+                    <field name="partner_shipping_mobile" />
+                    <field name="partner_shipping_phone" />
+                    <field name="partner_shipping_address" />
+                    <field name="order_comment" />
+                </xpath>
+                <xpath expr="//field[@name='origin']" position="after">
+                    <field name="confirm_date" />
+                    <field name="shipment_method" />
+                    <field name="delivery_status" readonly="1"/>
+                    <field name="po_goods_in_status" readonly="1"/>
+                    <field name="po_last_in_datetime" readonly="1"/>
+                </xpath>
+            	<xpath expr="//notebook[1]" position="inside">
+                    <page string="发货情况">
+                        <field name="delivery_ids" readonly="1">
+                            <tree>
+                                <field name="name"/>
+                                <field name="purchase_id"/>
+                                <field name="partner_id"/>
+                                <field name="send_time"/>
+                                <field name="send_company"/>
+                                <field name="delivery_lines"/>
+                                <field name="note"/>
+                            </tree>
+                            <form string="发货明细">
+                                <group colspan="4" col="4">
+                                    <group>
+                                        <field name="name"/>
+                                        <field name="purchase_id"/>
+                                        <field name="partner_id"/>
+                                    </group>
+                                    <group>
+                                        <field name="send_time"/>
+                                        <field name="send_company"/>
+                                    </group>
+                                </group>
+                                <field name="delivery_lines" options="{'reload_on_button': true}">
+                                    <tree create="false" delete="false">
+                                        <field name="product_id"/>
+                                        <field name="send_quantity"/>
+                                        <field name="product_uom"/>
+                                        <field name="delivery_id"/>
+                                    </tree>
+                                </field>
+                            </form>
+                        </field>
+                    </page>
+                </xpath>
+
+                <xpath expr="//button[@name='button_approve']" position="attributes">
+                    <attribute name="groups" ref="extra_purchase.group_purchase_manager"></attribute>
+                </xpath>
+
+                <xpath expr="//button[@name='action_rfq_send'][@states='draft']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//button[@name='action_rfq_send'][@states='sent']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//button[@name='action_rfq_send'][@states='purchase']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//button[@name='print_quotation'][@states='draft']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//button[@name='print_quotation'][@states='sent']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//button[@name='button_confirm'][@states='draft']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//button[@name='button_confirm'][@states='sent']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//button[@name='action_view_picking']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//button[@name='button_draft']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_procurement_dtot_server_action" model="ir.actions.server">
+            <field name="name">转为非直发</field>
+            <field name="model_id" ref="model_procurement_order"/>
+            <field name="state">code</field>
+            <field name="code">
+                    if context.get('active_model') == 'procurement.order' and context.get('active_ids'):
+                        res = records.with_context(context).action_procurement_dtot_server_action()
+                        action = res
+            </field>
+        </record>
+
+        <record id="action_action_procurement_dtot_server_action" model="ir.values">
+            <field name="model_id" ref="model_procurement_order" />
+            <field name="name">转为非直发</field>
+            <field name="key2">client_action_multi</field>
+            <field name="key">action</field>
+            <field name="model">procurement.order</field>
+            <field name="value" eval="'ir.actions.server,' + str(ref('action_procurement_dtot_server_action'))" />
+            
+        </record>
+
+        <record id="action_procurement_ttod_server_action" model="ir.actions.server">
+            <field name="name">转为直发</field>
+            <field name="model_id" ref="model_procurement_order"/>
+            <field name="state">code</field>
+            <field name="code">
+                    if context.get('active_model') == 'procurement.order' and context.get('active_ids'):
+                        res = records.with_context(context).action_procurement_ttod_server_action()
+                        action = res
+            </field>
+        </record>
+
+        <record id="action_action_procurement_ttod_server_action" model="ir.values">
+            <field name="model_id" ref="model_procurement_order" />
+            <field name="name">转为直发</field>
+            <field name="key2">client_action_multi</field>
+            <field name="key">action</field>
+            <field name="model">procurement.order</field>
+            <field name="value" eval="'ir.actions.server,' + str(ref('action_procurement_ttod_server_action'))" />
+            
+        </record>
+
+        <record id="set_supplier_partner_server_action" model="ir.actions.server">
+            <field name="name">设置供应商</field>
+            <field name="model_id" ref="model_procurement_order"/>
+            <field name="state">code</field>
+            <field name="code">
+                    if context.get('active_model') == 'procurement.order' and context.get('active_ids'):
+                        res = records.with_context(context).set_supplier_partner_server_action()
+                        action = res
+            </field>
+        </record>
+
+        <record id="action_set_supplier_partner_server_action" model="ir.values">
+            <field name="model_id" ref="model_procurement_order" />
+            <field name="name">设置供应商</field>
+            <field name="key2">client_action_multi</field>
+            <field name="key">action</field>
+            <field name="model">procurement.order</field>
+            <field name="value" eval="'ir.actions.server,' + str(ref('set_supplier_partner_server_action'))" />
+            
+        </record>
+
+
+        <record id="make_po_wizard_server_action" model="ir.actions.server">
+            <field name="name">创建采购单</field>
+            <field name="model_id" ref="model_procurement_order"/>
+            <field name="state">code</field>
+            <field name="code">
+                    if context.get('active_model') == 'procurement.order' and context.get('active_ids'):
+                        res = records.with_context(context).make_po_wizard_server_action()
+                        action = res
+            </field>
+        </record>
+
+        <record id="action_make_po_wizard_server_action" model="ir.values">
+            <field name="model_id" ref="model_procurement_order" />
+            <field name="name">创建采购单</field>
+            <field name="key2">client_action_multi</field>
+            <field name="key">action</field>
+            <field name="model">procurement.order</field>
+            <field name="value" eval="'ir.actions.server,' + str(ref('make_po_wizard_server_action'))" />
+            
+        </record>
+
+
+        <record id="cancel_procurements_server_action" model="ir.actions.server">
+            <field name="name">取消需求</field>
+            <field name="model_id" ref="model_procurement_order"/>
+            <field name="state">code</field>
+            <field name="code">
+                    if context.get('active_model') == 'procurement.order' and context.get('active_ids'):
+                        res = records.with_context(context).cancel_procurements_server_action()
+                        action = res
+            </field>
+        </record>
+
+        <record id="action_cancel_procurements_server_action" model="ir.values">
+            <field name="model_id" ref="model_procurement_order" />
+            <field name="name">取消需求</field>
+            <field name="key2">client_action_multi</field>
+            <field name="key">action</field>
+            <field name="model">procurement.order</field>
+            <field name="value" eval="'ir.actions.server,' + str(ref('cancel_procurements_server_action'))" />
+            
+        </record>
+
+        <record id="split_procurements_server_action" model="ir.actions.server">
+            <field name="name">拆分需求</field>
+            <field name="model_id" ref="model_procurement_order"/>
+            <field name="state">code</field>
+            <field name="code">
+                    if context.get('active_model') == 'procurement.order' and context.get('active_ids'):
+                        res = records.with_context(context).action_procurement_split_server_action()
+                        action = res
+            </field>
+        </record>
+
+        <record id="action_procurement_split_server_action" model="ir.values">
+            <field name="model_id" ref="model_procurement_order" />
+            <field name="name">拆分需求</field>
+            <field name="key2">client_action_multi</field>
+            <field name="key">action</field>
+            <field name="model">procurement.order</field>
+            <field name="value" eval="'ir.actions.server,' + str(ref('split_procurements_server_action'))" />
+            
+        </record>
+
+        <record id="extra_procurement_order_search" model="ir.ui.view">
+            <field name="name">采购需求搜索视图</field>
+            <field name="model">procurement.order</field>
+            <field name="inherit_id" ref="procurement.view_procurement_filter" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='product_id']" position='after'>
+                    <field name="sale_id" string='销售单'/>
+                    <field name="brand_id" />
+                    <field name="cat_no" />
+                </xpath>
+            </field>
+        </record>
+
+        <record id="extra_procurement_order_tree" model="ir.ui.view">
+            <field name="name">采购需求</field>
+            <field name="model">procurement.order</field>
+            <field name="arch" type="xml">
+                <tree create="0" delete="0">
+                    <field name="id" string='行号' />
+                    <field name="create_date" widget="date" />
+                    <field name="date_planned" widget="date"/>
+                    <field name="warehouse_id" />
+                    <field name="location_id" />
+                    <field name="supplier_partner_id" />
+                    <field name="supplier_delay" />
+                    <field name="customer_partner_id" />
+                    <field name="partner_shipping_name" />
+                    <field name="partner_shipping_mobile" />
+                    <field name="partner_shipping_phone" />
+                    <field name="partner_shipping_address" />
+                    <field name="purchase_price" />
+                    <field name="purchase_currency" />
+                    <field name="origin"/>
+                    <field name="product_id"/>
+                    <field name="brand_id" />
+                    <field name="cat_no" />
+                    <field name="product_qty"/>
+                    <field name="move_dest_id" invisible="1"/>
+                    <field name="product_uom" string="单位"/>
+                    <field name="purchase_comment" />
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="extra_stocking_procurement_order_tree" model="ir.ui.view">
+            <field name="name">采购需求</field>
+            <field name="model">procurement.order</field>
+            <field name="arch" type="xml">
+                <tree create="1" delete="0">
+                    <field name="id" string='行号' />
+                    <field name="create_date" widget="date" />
+                    <field name="date_planned" widget="date"/>
+                    <field name="warehouse_id" />
+                    <field name="location_id" />
+                    <field name="supplier_partner_id" />
+                    <field name="supplier_delay" />
+                    <field name="customer_partner_id" />
+                    <field name="partner_shipping_name" />
+                    <field name="partner_shipping_mobile" />
+                    <field name="partner_shipping_phone" />
+                    <field name="partner_shipping_address" />
+                    <field name="purchase_price" />
+                    <field name="purchase_currency" />
+                    <field name="origin"/>
+                    <field name="product_id"/>
+                    <field name="brand_id" />
+                    <field name="cat_no" />
+                    <field name="product_qty"/>
+                    <field name="move_dest_id" invisible="1"/>
+                    <field name="product_uom" string="单位"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="extra_purchase_invoice_tree" model="ir.ui.view">
+            <field name="name">采购发票</field>
+            <field name="model">purchase.invoice</field>
+            <field name="arch" type="xml">
+                <tree delete="0">
+                    <field name="purchase_ids" widget="many2many_tags" />
+                    <field name="invoice_num" />
+                    <field name="invoice_code" />
+                    <field name="invoice_date" />
+                    <field name="price_total" />
+                    <field name="price_tax" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="extra_purchase_invoice_form" model="ir.ui.view">
+            <field name="name">采购发票</field>
+            <field name="model">purchase.invoice</field>
+            <field name="arch" type="xml">
+                <form delete="0">
+                    <group>
+                        <field name="purchase_ids" widget="many2many_tags" />
+                        <field name="invoice_num" />
+                        <field name="invoice_code" />
+                        <field name="invoice_date" />
+                        <field name="price_total" />
+                        <field name="price_tax" />
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="extra_product_supplierinfo_tree" model="ir.ui.view">
+            <field name="name">产品供应商关系</field>
+            <field name="model">product.supplierinfo</field>
+            <field name="priority">15</field>
+            <field name="arch" type="xml">
+                <tree string="Vendor Information">
+                    <field name="sequence" widget="handle" invisible="1"/>
+                    <field name="product_id" string="产品"/>
+                    <field name="name"/>
+                    <!-- <field name="product_tmpl_id" string="Product" invisible="context.get('visible_product_tmpl_id', True)"/> -->
+                    <field name="min_qty" string="起订量"/>
+                    <field name="price" string="人民币成本"/>
+                    <field name="currency_id" />
+                    <field name="for_price" />
+                    <field name="date_start"/>
+                    <field name="date_end"/>
+                    <field name="vendor_term" />
+                    <field name="vendor_shipment" />
+                    <field name="delay" string='货期' />
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_extra_customer_procurement_tree_view" model="ir.actions.act_window">
+            <field name="name">采购直发需求</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">procurement.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="extra_procurement_order_tree" />
+            <field name="context">{'no_run': True, 'customer_procurement': True}</field>
+            <field name="domain" eval="[('location_id', '=', ref('extra_sale.stock_customer_transit_locations')), 
+                ('rule_id.action', '=', 'buy'),
+                ('state', '=', 'exception'), ('purchase_line_id', '=', False)]" />
+        </record>
+
+        <record id="action_extra_purchase_procurement_tree_view" model="ir.actions.act_window">
+            <field name="name">采购非直发需求</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">procurement.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="extra_procurement_order_tree" />
+            <field name="context">{'no_run': True, 'show_cancel': True, 'transfer_procurement': True}</field>
+            <field name="domain" eval="[('location_id', '!=', ref('extra_sale.stock_customer_transit_locations')), ('state', '=', 'exception'), 
+                ('origin', 'like', 'SO%'),
+                ('purchase_line_id', '=', False),
+                ('rule_id.action', '=', 'buy')]" />
+        </record>
+
+        <record id="action_extra_stocking_purchase_procurement_tree_view" model="ir.actions.act_window">
+            <field name="name">采购备货需求</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">procurement.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="extra_stocking_procurement_order_tree" />
+            <field name="context">{'no_run': True, 'import_procurement': True}</field>
+            <field name="domain" eval="[('location_id', '!=', ref('extra_sale.stock_customer_transit_locations')), ('state', '=', 'exception'),
+                ('origin', '=', 'stocking'),
+                ('purchase_line_id', '=', False)]" />
+        </record>
+
+        <record id="action_extra_purchase_invoice_tree_view" model="ir.actions.act_window">
+            <field name="name">采购发票</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="extra_purchase_invoice_tree" />
+        </record>
+
+        <record id="action_extra_product_supplierinfo_tree_view" model="ir.actions.act_window">
+            <field name="name">产品供应商关系</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.supplierinfo</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="extra_product_supplierinfo_tree" />
+        </record>
+
+        <menuitem name="产品供应商关系" action="action_extra_product_supplierinfo_tree_view" parent="purchase.menu_procurement_management" id="menu_action_extra_product_supplierinfo_tree_view" sequence="18" />
+        <menuitem name="采购直发需求" action="action_extra_customer_procurement_tree_view" id="menu_action_extra_customer_procurement_tree_view" parent="purchase.menu_purchase_control" sequence="30"/>
+        <menuitem name="采购非直发需求" action="action_extra_purchase_procurement_tree_view" id="menu_action_extra_purchase_procurement_tree_view" parent="purchase.menu_purchase_control" sequence="32"/>
+
+        <menuitem name="采购备货需求" action="action_extra_stocking_purchase_procurement_tree_view" id="menu_action_extra_stocking_purchase_procurement_tree_view" parent="purchase.menu_purchase_control" sequence="34"/>
+
+        <menuitem name="采购发票" action="action_extra_purchase_invoice_tree_view" id="menu_action_extra_purchase_invoice_tree_view" parent="purchase.menu_purchase_control" sequence="36"/>
+
+    </data>
+</odoo>

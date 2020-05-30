@@ -1,0 +1,9 @@
+<odoo>
+  <data>
+    <template id="assets_backend" inherit_id="web.assets_backend" name="rpc cache assets">
+      <xpath expr="." position="inside">
+        <script type="text/javascript" src="/base_rpc_cache/static/src/ajax_rpc.js"></script>
+      </xpath>
+    </template>
+  </data>
+</odoo>

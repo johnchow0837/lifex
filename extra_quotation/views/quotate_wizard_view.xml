@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_quotate_wizard_form" model="ir.ui.view">
+            <field name="name">quotate.wizard.form</field>
+            <field name="model">quotate.wizard</field>
+            <field name="arch" type="xml">
+                <form string="采购报价" class="o_sale_order">
+                <sheet>
+                    <div class="oe_title">
+                        <group>
+                            <h2>
+                                <field name="solve_type" />
+                                <field name="request_quotation_line_id" invisible="1" />
+                            </h2>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="m_cat_no" />
+                                <field name="m_product_name" />
+                                <field name="m_comment_desc" />
+                            </group>
+                            <group>
+                                <field name="m_cas_code" />
+                                <field name="m_product_category_name" />
+                                <field name="m_product_brand_name" />
+                            </group>
+                            <group>
+                                <field name="m_package_name" />
+                                <field name="m_product_uom_name" />
+                                <field name="m_product_uom_qty" />
+                            </group>
+                            <group>
+                                <field name="m_suggest_vendor" />
+                                <field name="m_required_date" />
+                                <field name="m_sale_comment" />
+                            </group>
+                        </group>
+                    </div>
+                    <notebook>
+                        <page name="其他信息" attrs="{'invisible': [('solve_type', '!=', False)]}">
+                            <h2>
+                                请选择操作处理方式！
+                            </h2>
+                        </page>
+                        <page name="修改商品" attrs="{'invisible': [('solve_type', '!=', 'modify')]}">
+                            <group>
+                                <group string="修改信息">
+                                    <field name="modify_cat_no" />
+                                    <field name="modify_product_name"
+                                        attrs="{'required': [('solve_type', '=', 'modify')]}" />
+                                    <field name="modify_comment_desc" />
+                                    <field name="modify_cas_code" />
+                                    <field name="modify_product_category_name" />
+                                    <field name="modify_product_brand_name" />
+                                    <field name="modify_package_name" />
+                                    <field name="modify_product_uom_name" />
+                                    <field name="modify_product_uom_qty"
+                                        attrs="{'required': [('solve_type', '=', 'modify')]}" />
+                                    <field name="suggest_vendor" />
+                                    <field name="required_date" />
+                                </group>
+                            </group>
+                        </page>
+                        <page name="指定商品" attrs="{'invisible': [('solve_type', '!=', 'sku')]}">
+                            <group>
+                                <group string="商品信息">
+                                    <field name="product_supplierinfo" invisible="1"/>
+                                    <field name="product_id"
+                                        domain="[(0, '=', 1)]"
+                                        attrs="{'required': [('solve_type', '=', 'sku')]}"
+                                        options="{'no_open': true, 'no_create': true}"
+                                         />
+                                    <field name="default_code"
+                                        attrs="{'required': [('solve_type', '=', 'sku')]}" />
+                                    <field name="cat_no"
+                                        attrs="{'required': [('solve_type', '=', 'sku')]}" />
+                                    <field name="comment_desc_cn"
+                                        attrs="{'required': [('solve_type', '=', 'sku')]}" />
+                                    <field name="comment_desc_en" />
+                                    <field name="cas_code" />
+                                    <field name="product_brand_name"
+                                        attrs="{'required': [('solve_type', '=', 'sku')]}" />
+                                    <field name="package_name" />
+                                    <field name="product_uom_name"
+                                        attrs="{'required': [('solve_type', '=', 'sku')]}" />
+                                    <field name="product_category_name"
+                                        attrs="{'required': [('solve_type', '=', 'sku')]}" />
+
+                                    <field name="product_manager_name"
+                                        attrs="{'required': [('solve_type', '=', 'sku')]}" />
+                                    <field name="is_stockitem"
+                                        attrs="{'required': [('solve_type', '=', 'sku')]}" />
+                                    <field name="product_status" />
+                                    <field name="is_discontinued"
+                                        attrs="{'required': [('solve_type', '=', 'sku')]}" />
+
+                                    <field name="storage_condition"
+                                        attrs="{'required': [('solve_type', '=', 'sku')]}" />
+                                    <field name="counting_weight"
+                                        attrs="{'required': [('solve_type', '=', 'sku')]}" />
+                                    <field name="net_weight"
+                                        attrs="{'required': [('solve_type', '=', 'sku')]}" />
+                                    <field name="duty_rate"
+                                        attrs="{'required': [('solve_type', '=', 'sku')]}" />
+
+                                    <field name="product_list_price_cny"
+                                        attrs="{'required': [('solve_type', '=', 'sku')]}" />
+                                    <field name="sale_currency"
+                                        attrs="{'required': [('solve_type', '=', 'sku')]}"
+                                        options="{'no_open': true, 'no_create': true}" />
+                                    <field name="product_list_price_for" />
+                                </group>
+                                <group string="供应商信息">
+                                    <field name="vendor_type"
+                                        attrs="{'required': [('solve_type', '=', 'sku')]}" />
+
+                                    <field name="vendor_id"
+                                        attrs="{'required': [('solve_type', '=', 'sku'), ('vendor_type', '=', 'special')], 'invisible': [('vendor_type', '!=', 'special')]}"
+                                        options="{'no_open': true, 'no_create': true}"
+                                        domain="[(0, '=', 1)]" />
+                                    <field name="vendor_contact_id" attrs="{'required': [('solve_type', '=', 'sku'), ('vendor_type', '=', 'special')], 'invisible': [('vendor_type', '!=', 'special')]}"
+                                        options="{'no_open': true, 'no_create': true}" />
+                                    <field name="vendor_contact_info" attrs="{'invisible': [('vendor_type', '!=', 'special')]}"/>
+                                    <field name="concat" attrs="{'invisible': [('vendor_type', '!=', 'special')]}"/>
+                                    <field name="email" attrs="{'invisible': [('vendor_type', '!=', 'special')]}"/>
+                                    <field name="product_purchase_currency"
+                                        attrs="{'required': [('solve_type', '=', 'sku'), ('vendor_type', '=', 'special')], 'invisible': [('vendor_type', '!=', 'special')]}"
+                                        options="{'no_open': true, 'no_create': true}" />
+                                    <field name="currency_exchange_rate"
+                                        attrs="{'required': [('solve_type', '=', 'sku'), ('vendor_type', '=', 'special')], 'invisible': [('vendor_type', '!=', 'special')]}" />
+                                    <field name="product_purchase_price_cny"
+                                        attrs="{'required': [('solve_type', '=', 'sku'), ('vendor_type', '=', 'special')], 'invisible': [('vendor_type', '!=', 'special')]}" />
+                                    <field name="product_purchase_price_for" attrs="{'invisible': [('vendor_type', '!=', 'special')]}"/>
+                                    <field name="price_expired_date"
+                                        attrs="{'required': [('solve_type', '=', 'sku'), ('vendor_type', '=', 'special')], 'invisible': [('vendor_type', '!=', 'special')]}" />
+
+                                    <field name="vendor_lead_time"
+                                        attrs="{'required': [('solve_type', '=', 'sku'), ('vendor_type', '=', 'special')], 'invisible': [('vendor_type', '!=', 'special')]}" />
+                                    <field name="vendor_lead_time_desc" attrs="{'invisible': [('vendor_type', '!=', 'special')]}"/>
+                                    <field name="min_order_qty" attrs="{'invisible': [('vendor_type', '!=', 'special')]}"/>
+                                    <field name="vendor_term" attrs="{'required': [('solve_type', '=', 'sku'), ('vendor_type', '=', 'special')], 'invisible': [('vendor_type', '!=', 'special')]}"/>
+                                    <field name="vendor_shipment" attrs="{'required': [('solve_type', '=', 'sku'), ('vendor_type', '=', 'special')], 'invisible': [('vendor_type', '!=', 'special')]}"/>
+                                    <field name="vendor_payment" options="{'no_open': true, 'no_create': true}" attrs="{'required': [('solve_type', '=', 'sku'), ('vendor_type', '=', 'special')], 'invisible': [('vendor_type', '!=', 'special')]}"/>
+
+
+                                    <field name="sku_new_vendor_id"
+                                        attrs="{'required': [('solve_type', '=', 'sku'), ('vendor_type', '=', 'new')], 'invisible': [('vendor_type', '!=', 'new')]}"
+                                        options="{'no_open': true, 'no_create': true}"
+                                        domain="[('id', '!=', vendor_id), ('supplier', '=', True), ('parent_id', '=', False)]" />
+                                    <field name="sku_new_vendor_contact_id" attrs="{'required': [('solve_type', '=', 'sku'), ('vendor_type', '=', 'new')], 'invisible': [('vendor_type', '!=', 'new')]}"
+                                        options="{'no_open': true, 'no_create': true}" />
+                                    <field name="sku_new_vendor_contact_info" attrs="{'invisible': [('vendor_type', '!=', 'new')]}"/>
+                                    <field name="sku_new_concat" attrs="{'invisible': [('vendor_type', '!=', 'new')]}"/>
+                                    <field name="sku_new_email" attrs="{'invisible': [('vendor_type', '!=', 'new')]}"/>
+                                    <field name="sku_new_product_purchase_currency"
+                                        attrs="{'required': [('solve_type', '=', 'sku'), ('vendor_type', '=', 'new')], 'invisible': [('vendor_type', '!=', 'new')]}"
+                                        options="{'no_open': true, 'no_create': true}" />
+                                    <field name="sku_new_currency_exchange_rate"
+                                        attrs="{'required': [('solve_type', '=', 'sku'), ('vendor_type', '=', 'new')], 'invisible': [('vendor_type', '!=', 'new')]}" />
+                                    <field name="sku_new_product_purchase_price_cny"
+                                        attrs="{'required': [('solve_type', '=', 'sku'), ('vendor_type', '=', 'new')], 'invisible': [('vendor_type', '!=', 'new')]}" />
+                                    <field name="sku_new_product_purchase_price_for" attrs="{'invisible': [('vendor_type', '!=', 'new')]}"/>
+                                    <field name="sku_new_price_expired_date"
+                                        attrs="{'required': [('solve_type', '=', 'sku'), ('vendor_type', '=', 'new')], 'invisible': [('vendor_type', '!=', 'new')]}" />
+
+                                    <field name="sku_new_vendor_lead_time"
+                                        attrs="{'required': [('solve_type', '=', 'sku'), ('vendor_type', '=', 'new')], 'invisible': [('vendor_type', '!=', 'new')]}" />
+                                    <field name="sku_new_vendor_lead_time_desc" attrs="{'invisible': [('vendor_type', '!=', 'new')]}"/>
+                                    <field name="sku_new_min_order_qty" attrs="{'invisible': [('vendor_type', '!=', 'new')]}"/>
+                                    <field name="sku_new_vendor_term" attrs="{'required': [('solve_type', '=', 'sku'), ('vendor_type', '=', 'new')], 'invisible': [('vendor_type', '!=', 'new')]}"/>
+                                    <field name="sku_new_vendor_shipment" attrs="{'required': [('solve_type', '=', 'sku'), ('vendor_type', '=', 'new')], 'invisible': [('vendor_type', '!=', 'new')]}"/>
+                                    <field name="sku_new_vendor_payment" options="{'no_open': true, 'no_create': true}" attrs="{'required': [('solve_type', '=', 'sku'), ('vendor_type', '=', 'new')], 'invisible': [('vendor_type', '!=', 'new')]}"/>
+
+                                </group>
+                                <group string="其他信息">
+                                    <field name="purchase_comment" />
+                                </group>
+                            </group>
+                        </page>
+                        <page name="新建商品" attrs="{'invisible': [('solve_type', '!=', 'new')]}">
+                            <group>
+                                <group string="商品信息">
+
+                                    <field name="new_product_name"
+                                        attrs="{'required': [('solve_type', '=', 'new')]}" />
+                                    <field name="new_default_code" invisible="1"/>
+                                    <field name="new_categ_id"
+                                        attrs="{'required': [('solve_type', '=', 'new')]}" 
+                                        options="{'no_open': true, 'no_create': true}"
+                                        domain="[('parent_id', '!=', False)]" />
+
+                                    <field name="new_cas_code" />
+                                    <field name="new_brand_id"
+                                        attrs="{'required': [('solve_type', '=', 'new')]}"
+                                        options="{'no_open': true, 'no_create': true}" />
+                                    <field name="new_package_name" />
+                                    <field name="new_cat_no"
+                                        attrs="{'required': [('solve_type', '=', 'new')]}" />
+                                    <field name="new_comment_desc_cn"
+                                        attrs="{'required': [('solve_type', '=', 'new')]}" />
+                                    <field name="new_comment_desc_en" />
+                                    <field name="new_storage_condition"
+                                        attrs="{'required': [('solve_type', '=', 'new')]}" />
+                                    <field name="new_counting_weight"
+                                        attrs="{'required': [('solve_type', '=', 'new')]}" />
+                                    
+                                    <field name="new_net_weight"
+                                        attrs="{'required': [('solve_type', '=', 'new')]}" />
+                                    <field name="new_is_discontinued"
+                                        attrs="{'required': [('solve_type', '=', 'new')]}" />
+                                    <field name="new_product_manager_name"
+                                        attrs="{'required': [('solve_type', '=', 'new')]}" />
+                                    <field name="new_is_stockitem"
+                                        attrs="{'required': [('solve_type', '=', 'new')]}" />
+                                    <field name="new_min_orderqty"
+                                        attrs="{'required': [('solve_type', '=', 'new')]}" />
+
+                                    <field name="new_sale_currency"
+                                        attrs="{'required': [('solve_type', '=', 'new')]}" 
+                                        options="{'no_open': true, 'no_create': true}"/>
+
+                                    <field name="new_product_list_price_cny"
+                                        attrs="{'required': [('solve_type', '=', 'new')]}" />
+
+                                    <field name="new_product_list_price_for"
+                                        attrs="{'required': [('solve_type', '=', 'new')]}" />
+
+                                    <field name="new_product_status" />
+                                    <field name="new_product_model"
+                                        attrs="{'required': [('solve_type', '=', 'new')]}" />
+                                    <field name="new_uom_id"
+                                        attrs="{'required': [('solve_type', '=', 'new')]}"
+                                        options="{'no_open': true, 'no_create': true}" />
+                                </group>
+                                <group string="供应商">
+                                    <field name="new_vendor_id"
+                                        attrs="{'required': [('solve_type', '=', 'new')]}"
+                                        options="{'no_open': true, 'no_create': true}" 
+                                        domain="[('supplier', '=', True), ('parent_id', '=', False)]" />
+
+                                    <field name="new_vendor_contact_id"
+                                        options="{'no_open': true, 'no_create': true}" 
+                                        attrs="{'required': [('solve_type', '=', 'new')]}" />
+
+                                    <field name="new_vendor_contact_info"
+                                        attrs="{'required': [('solve_type', '=', 'new')]}" />
+                                    <field name="new_concat"
+                                        attrs="{'required': [('solve_type', '=', 'new')]}" />
+                                    <field name="new_email" />
+
+                                    <field name="new_min_order_qty"
+                                        attrs="{'required': [('solve_type', '=', 'new')]}" />
+
+                                    <field name="new_supplier_taxes_id" 
+                                        attrs="{'required': [('solve_type', '=', 'new')]}" 
+                                        options="{'no_open': true, 'no_create': true}" />
+
+                                    <field name="new_product_purchase_currency"
+                                        attrs="{'required': [('solve_type', '=', 'new')]}" 
+                                        options="{'no_open': true, 'no_create': true}" />
+
+                                    <field name="new_currency_exchange_rate"
+                                        attrs="{'required': [('solve_type', '=', 'new')]}" />
+
+                                    <field name="new_product_purchase_price_cny"
+                                        attrs="{'required': [('solve_type', '=', 'new')]}" />
+                                    <field name="new_product_purchase_price_for"
+                                        attrs="{'required': [('solve_type', '=', 'new')]}" />
+
+                                    <field name="new_price_expired_date"
+                                        attrs="{'required': [('solve_type', '=', 'new')]}" />
+
+                                    <field name="new_vendor_lead_time"
+                                        attrs="{'required': [('solve_type', '=', 'new')]}" />
+
+                                    <field name="new_vendor_lead_time_desc" />
+
+                                    <field name="new_duty_rate"
+                                        attrs="{'required': [('solve_type', '=', 'new')]}" />
+
+                                    <field name="new_vendor_term"
+                                        attrs="{'required': [('solve_type', '=', 'new')]}" />
+
+                                    <field name="new_vendor_shipment"
+                                        attrs="{'required': [('solve_type', '=', 'new')]}" />
+
+                                    <field name="new_vendor_payment"
+                                        attrs="{'required': [('solve_type', '=', 'new')]}" 
+                                        options="{'no_open': true, 'no_create': true}" />
+
+<!--                                     <field name="new_estimated_delivery_time"
+                                        attrs="{'required': [('solve_type', '=', 'new')]}" />
+
+                                    <field name="new_estimated_delivery_time_desc"
+                                        attrs="{'required': [('solve_type', '=', 'new')]}" /> -->
+
+                                </group>
+                                <group string="其他信息">
+
+                                    <!-- <field name="new_external_comments"
+                                        attrs="{'required': [('solve_type', '=', 'new')]}" />
+
+                                    <field name="new_internal_comments"
+                                        attrs="{'required': [('solve_type', '=', 'new')]}" /> -->
+
+                                    <field name="new_purchase_comment" />
+
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button string="修改" name="action_modify" type="object" attrs="{'invisible': [('solve_type', '!=', 'modify')]}"/>
+                    <button string="指定" name="action_special" type="object" attrs="{'invisible': [('solve_type', '!=', 'sku')]}"/>
+                    <button string="新建" name="action_new_create" type="object" attrs="{'invisible': [('solve_type', '!=', 'new')]}"/>
+                    <button string="关闭" special="cancel" />
+                </footer>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>

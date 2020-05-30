@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_extra_quotation_tree" model="ir.ui.view">
+            <field name="name">sale.quotation.tree</field>
+            <field name="model">sale.quotation</field>
+            <field name="arch" type="xml">
+                <tree string="报价表" default_order="request_quotation_id desc, request_quotation_line_id desc" delete="0" create="0">
+                    <field name="request_quotation_id" />
+                    <field name="request_quotation_line_id" />
+                    <field name="id" string="序列号" />
+                    <field name="product_id" invisible="0"/>
+                    <field name="default_code" />
+                    <field name="cat_no" />
+                    <field name="comment_desc_cn" />
+                    <field name="vendor_id" invisible="1"/>
+                    <field name="vendor_code" invisible="1"/>
+                    <field name="vendor_name" invisible="1"/>
+                    <field name="vendor_contact_info" invisible="1"/>
+                    <field name="concat" invisible="1"/>
+                    <field name="email" invisible="1"/>
+                    <field name="product_brand_name" />
+                    <field name="package_name" />
+                    <field name="product_uom_name" />
+                    <field name="product_list_price_cny" />
+                    <field name="product_purchase_price_cny" />
+                    <field name="product_purchase_currency" />
+                    <field name="price_expired_date" />
+                    <field name="vendor_lead_time" />
+                    <field name="purchase_comment" />
+                    <field name="match_status" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_extra_can_delete_quotation_tree" model="ir.ui.view">
+            <field name="name">sale.quotation.tree</field>
+            <field name="model">sale.quotation</field>
+            <field name="arch" type="xml">
+                <tree string="报价表" default_order="request_quotation_id desc, request_quotation_line_id desc" delete="1" create="0">
+                    <field name="request_quotation_id" />
+                    <field name="request_quotation_line_id" />
+                    <field name="id" string="序列号" />
+                    <field name="product_id" invisible="0"/>
+                    <field name="default_code" />
+                    <field name="cat_no" />
+                    <field name="comment_desc_cn" />
+                    <field name="vendor_id" invisible="1"/>
+                    <field name="vendor_code" invisible="1"/>
+                    <field name="vendor_name" invisible="1"/>
+                    <field name="vendor_contact_info" invisible="1"/>
+                    <field name="concat" invisible="1"/>
+                    <field name="email" invisible="1"/>
+                    <field name="product_brand_name" />
+                    <field name="package_name" />
+                    <field name="product_uom_name" />
+                    <field name="product_list_price_cny" />
+                    <field name="product_purchase_price_cny" />
+                    <field name="product_purchase_currency" />
+                    <field name="price_expired_date" />
+                    <field name="vendor_lead_time" />
+                    <field name="purchase_comment" />
+                    <field name="match_status" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_extra_request_quotation_line_tree" model="ir.ui.view">
+            <field name="name">sale.request.quotation.line.tree</field>
+            <field name="model">sale.request.quotation.line</field>
+            <field name="arch" type="xml">
+                <tree string="询价表" default_order="commited_date desc" delete="0">
+                    <field name="id" string="序列号" />
+                    <field name="request_quotation_id" />
+                    <field name="cat_no" />
+                    <field name="product_name" />
+                    <field name="comment_desc" />
+                    <field name="cas_code" />
+                    <field name="product_category_name" />
+                    <field name="product_brand_name" />
+                    <field name="package_name" />
+                    <field name="product_uom_name" />
+                    <field name="suggest_vendor" />
+                    <field name="required_date" />
+                    <field name="product_uom_qty" />
+                    <field name="state" invisible="1"/>
+                    <field name="commited_date" />
+                    <field name="user_id" />
+                    <field name="sale_comment" />
+                    <field name="quotation_lines" />
+                    <button name="action_quotate" type="object" string="报价" states="progress" invisible="context.get('no_quotate', False)" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_extra_request_quotation_line_history_tree" model="ir.ui.view">
+            <field name="name">sale.request.quotation.line.history.tree</field>
+            <field name="model">sale.request.quotation.line.history</field>
+            <field name="arch" type="xml">
+                <tree string="询价表历史" delete="0">
+                    <field name="cat_no" />
+                    <field name="product_name" />
+                    <field name="comment_desc" />
+                    <field name="cas_code" />
+                    <field name="product_category_name" />
+                    <field name="product_brand_name" />
+                    <field name="package_name" />
+                    <field name="product_uom_name" />
+                    <field name="suggest_vendor" />
+                    <field name="required_date" />
+                    <field name="product_uom_qty" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_extra_request_quotation_line_form" model="ir.ui.view">
+            <field name="name">sale.request.quotation.line.form</field>
+            <field name="model">sale.request.quotation.line</field>
+            <field name="arch" type="xml">
+                <form string="询价表">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="request_quotation_id" options="{'no_open': true, 'no_create': true}"/>
+                                <field name="cat_no" />
+                                <field name="product_name" />
+                                <field name="comment_desc" />
+                                <field name="cas_code" />
+                                <field name="product_category_name" />
+                                <field name="product_brand_name" />
+                            </group>
+                            <group>
+                                <field name="package_name" />
+                                <field name="product_uom_name" />
+                                <field name="suggest_vendor" />
+                                <field name="required_date" />
+                                <field name="product_uom_qty" />
+                                <field name="commited_date" />
+                                <field name="user_id" options="{'no_open': true, 'no_create': true}"/>
+                                <field name="sale_comment" />
+                            </group>
+                        </group>
+                        <field name="state" invisible="1"/>
+                        <field name="quotation_lines" readonly="1">
+                            <tree string="报价表">
+                                <field name="product_id" invisible="0"/>
+                                <field name="default_code" />
+                                <field name="cat_no" />
+                                <field name="comment_desc_cn" />
+                                <field name="vendor_id" />
+                                <field name="vendor_code" invisible="1"/>
+                                <field name="vendor_name" invisible="1"/>
+                                <field name="vendor_contact_info" invisible="1"/>
+                                <field name="concat" invisible="1"/>
+                                <field name="email" invisible="1"/>
+                                <field name="product_brand_name" />
+                                <field name="package_name" />
+                                <field name="product_uom_name" />
+                                <field name="product_list_price_cny" />
+                                <field name="product_purchase_price_cny" />
+                                <field name="product_purchase_currency" />
+                                <field name="price_expired_date" />
+                                <field name="vendor_lead_time" />
+                                <field name="purchase_comment" />
+                                <field name="match_status" invisible="1"/>
+                            </tree>
+                        </field>
+                        <group>
+                            <field name="history_ids" readonly="1">
+                                <tree>
+                                    <field name="cat_no" />
+                                    <field name="product_name" />
+                                    <field name="comment_desc" />
+                                    <field name="cas_code" />
+                                    <field name="product_category_name" />
+                                    <field name="product_brand_name" />
+                                    <field name="package_name" />
+                                    <field name="product_uom_name" />
+                                    <field name="suggest_vendor" />
+                                    <field name="required_date" />
+                                    <field name="product_uom_qty" />
+                                </tree>
+                            </field>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_extra_request_quotation_tree" model="ir.ui.view">
+            <field name="name">sale.request.quotation.tree</field>
+            <field name="model">sale.request.quotation</field>
+            <field name="priority">4</field>
+            <field name="arch" type="xml">
+                <tree string="客户询价单" class="o_sale_order" decoration-bf="message_needaction==True" decoration-muted="state=='cancel'" delete="0">
+                    <field name="message_needaction" invisible="1"/>
+                    <field name="name" />
+                    <field name="create_date"/>
+                    <field name="partner_id"/>
+                    <field name="user_id"/>
+                    <field name="required_currency" invisible="0"/>
+                    <field name="quotation_state" />
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_extra_request_quotation_form" model="ir.ui.view">
+            <field name="name">sale.request.quotation.form</field>
+            <field name="model">sale.request.quotation</field>
+            <field name="arch" type="xml">
+                <form string="客户询价单" class="o_sale_order">
+                <header>
+                    <button name="action_commit" states="draft" type="object" string="提交" invisible="1"/>
+                    <button name="action_confirmed" states="draft" type="object" string="确认" />
+                    <button name="action_process" states="commited" type="object" string="处理"/>
+                    <button name="action_draft" states="cancel" type="object" string="重置为草稿"/>
+                    <button name="action_close" type="object" string="订单完成" states="progress"
+                        help="If the sale is locked, you can not modify it anymore."/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,progress"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner_id" domain="[('customer','=', True), ('parent_id', '=', False)]" context="{'search_default_customer':1, 'show_address': 1}" options='{"always_reload": True, "no_open": true, "no_create": true}' />
+                            <field name="partner_name" />
+                            <field name="required_currency" options="{'no_open': true, 'no_create': true}"/>
+                            <field name="create_date" />
+                            <field name="user_id" options="{'no_open': true, 'no_create': true}"/>
+                            <field name="closed_date" attrs="{'invisible': [('state', '!=', 'closed')]}"/>
+                            <field name="closed_user" attrs="{'invisible': [('state', '!=', 'closed')]}"/>
+                        </group>
+                        <group>
+                            <field name="commited_date" />
+                            <field name="commited_user" />
+                            <field name="processed_date" invisible="1"/>
+                            <field name="processed_user" invisible="1"/>
+                            <field name="cancelled_date" attrs="{'invisible': [('state', '!=', 'cancel')]}"/>
+                            <field name="cancelled_user" attrs="{'invisible': [('state', '!=', 'cancel')]}"/>
+                            <field name="quotation_state" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="询价单明细">
+                            <field name="order_line"
+                                attrs="{'readonly': [('state', 'in', ('closed', 'commited', 'progress', 'cancel'))]}">
+                                <tree editable="bottom">
+                                    <field name="cat_no" />
+                                    <field name="product_name" />
+                                    <field name="comment_desc" />
+                                    <field name="cas_code" />
+                                    <field name="product_category_name" />
+                                    <field name="product_brand_name" />
+                                    <field name="package_name" />
+                                    <field name="product_uom_name" />
+                                    <field name="suggest_vendor" />
+                                    <field name="required_date" />
+                                    <field name="product_uom_qty" />
+                                    <field name="sale_comment" />
+                                    <field name="state" invisible="1"/>
+                                    <field name="quotation_lines" attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="create_sale_order_server_action" model="ir.actions.server">
+            <field name="name">生成报价单</field>
+            <field name="model_id" ref="model_sale_quotation"/>
+            <field name="state">code</field>
+            <field name="code">
+                    if context.get('active_model') == 'sale.quotation' and context.get('active_ids'):
+                        res = records.with_context(context).create_sale_order_server_action()
+                        action = res
+            </field>
+        </record>
+
+        <record id="action_create_sale_order_server_action" model="ir.values">
+            <field name="model_id" ref="model_sale_quotation" />
+            <field name="name">生成报价单</field>
+            <field name="key2">client_action_multi</field>
+            <field name="key">action</field>
+            <field name="model">sale.quotation</field>
+            <field name="value" eval="'ir.actions.server,' + str(ref('create_sale_order_server_action'))" />
+            
+        </record>
+
+        <record id="action_extra_request_quotation_tree_view" model="ir.actions.act_window">
+            <field name="name">询价单</field>
+            <field name="res_model">sale.request.quotation</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+            <field name="view_id" ref="view_extra_request_quotation_tree" />
+            <field name="help"></field>
+        </record>
+
+        <record id="sale_action_extra_request_quotation_line_tree_view" model="ir.actions.act_window">
+            <field name="name">询价明细</field>
+            <field name="res_model">sale.request.quotation.line</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'no_quotate': True}</field>
+            <field name="view_id" ref="view_extra_request_quotation_line_tree" />
+            <field name="help"></field>
+        </record>
+
+        <record id="purchase_action_extra_request_quotation_line_tree_view" model="ir.actions.act_window">
+            <field name="name">询价明细</field>
+            <field name="res_model">sale.request.quotation.line</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+            <field name="view_id" ref="view_extra_request_quotation_line_tree" />
+            <field name="domain">[('state', '=', 'progress')]</field>
+            <field name="help"></field>
+        </record>
+
+        <record id="action_view_extra_quotation_tree_view" model="ir.actions.act_window">
+            <field name="name">报价明细</field>
+            <field name="res_model">sale.quotation</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+            <field name="view_id" ref="view_extra_quotation_tree" />
+            <field name="help"></field>
+        </record>
+
+        <record id="action_view_extra_can_delete_quotation_tree_view" model="ir.actions.act_window">
+            <field name="name">报价明细</field>
+            <field name="res_model">sale.quotation</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'no_quotation': True}</field>
+            <field name="view_id" ref="view_extra_can_delete_quotation_tree" />
+            <field name="help"></field>
+        </record>
+
+        <menuitem name="询报价" id="menu_action_extra_request_quotation_base" parent="sales_team.menu_base_partner" sequence="30"/>
+        <menuitem name="询价单" action="action_extra_request_quotation_tree_view" id="menu_action_extra_request_quotation_tree_view" parent="menu_action_extra_request_quotation_base" sequence="30"/>
+
+        <menuitem name="询价明细" action="sale_action_extra_request_quotation_line_tree_view" id="menu_sale_action_extra_request_quotation_line_tree_view" parent="menu_action_extra_request_quotation_base" sequence="40"/>
+
+        <menuitem name="报价明细" action="action_view_extra_quotation_tree_view" id="menu_action_view_extra_quotation_tree_view" parent="menu_action_extra_request_quotation_base" sequence="50"/>
+
+
+        <menuitem name="采购报价" action="purchase_action_extra_request_quotation_line_tree_view" id="menu_purchase_action_extra_request_quotation_line_tree_view" parent="purchase.menu_procurement_management" sequence="20"/>
+
+        <menuitem name="报价明细" action="action_view_extra_can_delete_quotation_tree_view" id="menu_action_view_extra_can_delete_quotation_tree_view" parent="purchase.menu_procurement_management" sequence="40"/>
+
+    </data>
+</odoo>

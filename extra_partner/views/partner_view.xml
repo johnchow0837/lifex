@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="extra_res_partner_form_view" model="ir.ui.view">
+            <field name="name">业务伙伴页面增加供应商信息</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <page name="internal_notes" position="after">
+                    <page string="其他信息" name="extra_info">
+                        <group string="供应商属性" name="supplier_info" attrs="{'invisible': [('supplier', '!=', True)]}">
+                            <group>
+                                <field name="supplier_name_2" attrs="{'required': [('supplier', '=', True)], 'invisible': [('supplier', '!=', True)]}"/>
+                                <field name="supplier_guid" attrs="{'invisible': [('supplier', '!=', True)]}" required="0" readonly="1"/>
+                                <field name="supplier_cat_no" attrs="{'invisible': [('supplier', '!=', True)]}"/>
+                                <field name="supplier_type" attrs="{'required': [('supplier', '=', True)], 'invisible': [('supplier', '!=', True)]}"/>
+                                <field name="search_condition" attrs="{'required': [('supplier', '=', True)], 'invisible': [('supplier', '!=', True)]}"/>
+                                <field name="supplier_taxpayer_number" attrs="{'required': [('supplier', '=', True)], 'invisible': [('supplier', '!=', True)]}"/>
+                                <field name="business_scope" attrs="{'invisible': [('supplier', '!=', True)]}"/>
+                                <!-- <field name="payment_method" attrs="{'required': [('supplier', '=', True)], 'invisible': [('supplier', '!=', True)]}"/> -->
+                                <field name="payment_currency" attrs="{'required': [('supplier', '=', True)], 'invisible': [('supplier', '!=', True)]}"
+                                    options="{'no_create': True, 'no_open': True}"/>
+                            </group>
+                        </group>
+
+                        <group string="客户属性" name="customer_info" attrs="{'invisible': [('customer', '!=', True)]}">
+                            <group>
+                                <field name="customer_guid" attrs="{'invisible': [('customer', '!=', True)]}" required="0" readonly="1"/>
+                                <field name="customer_invoice_type" attrs="{'required': [('customer', '=', True)], 'invisible': [('customer', '!=', True)]}"/>
+                                <field name="customer_taxpayer_number" 
+                                    attrs="{'required': [('customer_invoice_type', '=', 'vat'), ('customer', '=', True)], 'invisible': [('customer', '!=', True)]}"/>
+
+                                <field name="customer_invoice_title" 
+                                    attrs="{'required': [('customer_invoice_type', '=', 'vat'), ('customer', '=', True)], 'invisible': [('customer', '!=', True)]}"/>
+
+                                <field name="customer_invoice_bank" 
+                                    attrs="{'required': [('customer_invoice_type', '=', 'vat'), ('customer', '=', True)], 'invisible': [('customer', '!=', True)]}"/>
+
+                                <field name="customer_invoice_account" 
+                                    attrs="{'required': [('customer_invoice_type', '=', 'vat'), ('customer', '=', True)], 'invisible': [('customer', '!=', True)]}"/>
+
+                                <field name="customer_invoice_address" 
+                                    attrs="{'required': [('customer_invoice_type', '=', 'vat'), ('customer', '=', True)], 'invisible': [('customer', '!=', True)]}"/>
+
+                                <field name="customer_invoice_phone" 
+                                    attrs="{'required': [('customer_invoice_type', '=', 'vat'), ('customer', '=', True)], 'invisible': [('customer', '!=', True)]}"/>
+                                    
+                            </group>
+                        </group>
+                    </page>
+                </page>
+
+                <xpath expr="//field[@name='child_ids']" position="attributes">
+                    <attribute name="context">{'default_parent_id': active_id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_supplier': supplier, 'default_customer': customer, 'default_lang': lang, 'default_company_title_name': name}</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='child_ids']/form/sheet/field[@name='type']" position="before">
+                    <group>
+                        <field name="company_title_name" />
+                    </group>
+                </xpath>
+
+                <xpath expr="//field[@name='child_ids']/form/sheet/group/group" position="attributes">
+                    <attribute name="attrs"></attribute>
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="extra_res_partner_form_view_modify_account" model="ir.ui.view">
+            <field name="name">业务伙伴页面修改财务相关信息</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="account.view_partner_property_form"/>
+            <field name="arch" type="xml">
+                <field name="property_payment_term_id" position="attributes">
+                    <attribute name="widget"></attribute>
+                    <attribute name="options">{'no_create': True, 'no_open': True}</attribute>
+                    <attribute name="attrs">{'required': [('customer', '=', True)]}</attribute>
+                </field>
+                <field name="property_supplier_payment_term_id" position="attributes">
+                    <attribute name="widget"></attribute>
+                    <attribute name="options">{'no_create': True, 'no_open': True}</attribute>
+                    <attribute name="attrs">{'required': [('supplier', '=', True)]}</attribute>
+                </field>
+            </field>
+        </record>
+
+        <record id="extra_res_bank_form_view" model="ir.ui.view">
+            <field name="name">银行界面增加额外信息</field>
+            <field name="model">res.bank</field>
+            <field name="inherit_id" ref="base.view_res_bank_form"/>
+            <field name="arch" type="xml">
+                <field name="bic" position="after">
+                    <field name="bank_code" />
+                </field>
+            </field>
+        </record>
+
+        
+
+    </data>
+</odoo>

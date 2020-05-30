@@ -1,0 +1,60 @@
+<odoo>
+    <data>
+        <record id="view_company_form_inherit" model="ir.ui.view">
+            <field name="name">公司增加科目</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="model">res.company</field>
+            <field name="arch" type="xml">
+
+                <field name="website" position="after">
+                    <field name="company_receivable_acc_id" />
+                    <field name="company_payable_acc_id" />
+                    <field name="company_prepay_acc_id" />
+                    <field name="company_prereceive_acc_id" />
+                </field>
+            </field>
+        </record>
+
+        <record id="view_tax_form_inherit" model="ir.ui.view">
+            <field name="name">税增加科目</field>
+            <field name="inherit_id" ref="account.view_tax_form"/>
+            <field name="model">account.tax</field>
+            <field name="arch" type="xml">
+
+                <field name="refund_account_id" position="after">
+                    <field name="invoice_account_id" />
+                </field>
+            </field>
+        </record>
+
+        <record id="view_account_payment_form_inherit" model="ir.ui.view">
+            <field name="name">收付款增加预收字段</field>
+            <field name="inherit_id" ref="account.view_account_payment_form"/>
+            <field name="model">account.payment</field>
+            <field name="arch" type="xml">
+                <field name="payment_type" position="after">
+                    <field name="is_pre_payment" />
+                </field>
+                <button name="post" position="after">
+                    <button name="action_writeoff" type="object" string='冲销交易' attrs="{'invisible': ['|', ('state', '!=', 'posted'), ('is_pre_payment', '=', False)]}"/>
+                </button>
+                <field name="partner_id" position="attributes">
+                    <attribute name="options">{'no_create': True}</attribute>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_account_payment_cancel_form_inherit" model="ir.ui.view">
+            <field name="name">取消按钮隐藏</field>
+            <field name="inherit_id" ref="account_cancel.payment_cancel_form_inherit"/>
+            <field name="model">account.payment</field>
+            <field name="arch" type="xml">
+                <button name="cancel" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </button>
+            </field>
+        </record>
+
+        <menuitem action="account.action_account_payments_payable" id="menu_action_account_payments_payable_purchase" parent="purchase.menu_procurement_management" sequence="20" groups="extra_account.group_purchase_account_user" name="采购付款"/>
+    </data>
+</odoo>

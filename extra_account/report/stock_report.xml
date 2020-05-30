@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <report
+            id="extra_express_print_label"
+            string="送货单"
+            model="stock.picking"
+            report_type="qweb-pdf"
+            name="extra_stock.extra_express_print"
+            file="extra_stock.extra_express_print"/>
+
+
+<template id="extra_express_print">
+    <t t-foreach="docs" t-as="o">
+      <t t-set="o" t-value="o.with_context({'lang':o.partner_id.lang})"/>
+
+        <div class="header">
+            <table width="100%" border="0" font-color="grey">
+                <tr>
+                    <td width="30%" class="text-left"><b><font color="grey">彬谷打印送货单</font></b></td>
+                    <td width="30%" class="text-center"><b><font color="grey">送货单编号：<t t-esc="o.name"/></font></b></td>
+                    <td width="30%" class="text-right"><b><font color="grey"><ul class="list-inline">
+                                                                                <li>第</li>
+                                                                                <li><span class="page"/></li>
+                                                                                <li>页</li>,
+                                                                                <li>共</li>
+                                                                                <li><span class="topage"/></li>
+                                                                                <li>页</li>
+                                                                                </ul></font></b></td>
+                </tr>
+            </table>
+            <hr style="line-height:1px;height:1px;border-bottom:3px solid grey;margin:1px;"/>
+        </div>
+        <div class="page">
+            <center>
+
+            <table width="640" border="0" cellspacing="0" bgcolor="#ffffff">
+                <tr>
+                    <td width="250" height="30" valign="bottom">
+                    <img t-if="o.company_id.logo" t-att-src="'data:image/png;base64,%s' % o.company_id.logo" style="max-height:60px;width:auto" border="0"/>
+                    </td>
+                    <td align="right" valign="bottom">
+                    <font face="arial">
+                    <h2>
+                    <t t-esc="o.company_id.name"/>
+                    </h2>
+                    <br/>
+                    <b>
+                    售后热线：400-920-3909
+                    </b>
+                    </font>
+                    </td>
+                    <td rowspan="2" style="text-align:right;">  
+                    </td>
+                </tr>
+            </table>
+            <br/><br/><br/>
+
+            <table style="font-size:14px;width:100%;">
+                <tr>
+                    <td style="vertical-align:middle;width:30%;">
+                        <img src="/ehsy_stock_purchase_02/static/img/logo.png" border="0"/>
+                    </td>
+                    <td style="text-align:center;width:40%;">
+                       <h2>送货单</h2>
+                    </td>
+                    <td style="vertical-align:middle;width:30%;">
+                    </td>
+                </tr>
+            </table>
+            <hr style="line-height:1px;height:1px;border:none;border-bottom:3px solid #454545;margin:1px;"/>
+            <t t-set="sale" t-value="o.mapped('move_lines.procurement_id.sale_line_id.order_id')"/>
+            <table style="font-size:14px;width:100%;">
+                <tr>
+                    <td width="15%" align="left">客    户：</td>
+                    <td width="25%" align="left"><t t-esc="sale.partner_id.name or ''"/></td>
+                    <td width="15%" align="left"/>
+                    <td width="15%" align="left"/>
+                    <td width="15%" align="left">发货日期：</td>
+                    <!-- <td width="15%" align="left"><t t-esc="(datetime.datetime.now() + datetime.timedelta(hours=8)).strftime('%Y-%m-%d')"/></td> -->
+                    <td width="15%" align="left">
+                        <t t-if="o.date_done">
+                            <t t-esc="(datetime.datetime.strptime(o.date_done, '%Y-%m-%d %H:%M:%S') + datetime.timedelta(hours=8)).strftime('%Y-%m-%d')"/>
+                        </t>
+                        <t t-if="not o.date_done">
+                            <t t-esc="(datetime.datetime.now() + datetime.timedelta(hours=8)).strftime('%Y-%m-%d')"/>
+                        </t>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="15%" align="left">客户订单号：</td>
+                    <td width="25%" align="left"><t t-esc="sale and sale[0].contract_num or ''"/></td>
+                    <td width="15%" align="left"/>
+                    <td width="15%" align="left"/>
+                    <td width="15%" align="left">销    售：</td>
+                    <td width="15%" align="left"><t t-esc="sale and sale[0].user_id.name or ''"/></td>
+                </tr>
+                <tr>
+                    <td width="15%" align="left">收 货 人：</td>
+                    <td width="25%" align="left">
+                        <t t-esc="sale and sale[0].partner_shipping_id.name or ''"/>
+                    </td>
+                    <td width="15%" align="left"/>
+                    <td width="15%" align="left"/>
+                    <td width="15%" align="left">联系方式：</td>
+                    <td width="15%" align="left">
+                        <t t-esc="sale and sale[0].partner_shipping_id.phone or ''"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="15%" align="left">送货地址：</td>
+                    <td width="25%" align="left"><t t-esc="sale and sale[0].partner_shipping_id.street or ''"/></td>
+
+
+                    <td width="15%" align="left"/>
+                    <td width="15%" align="left">
+                    </td>
+                    <td width="15%" align="left"/>
+                    <td width="15%" align="left">
+                    </td>
+                </tr>
+
+            </table>
+            <br/><br/>
+
+            <table style="font-size:14px;width:100%;">
+              
+                <tr><td class="text-left">尊敬的阁下：</td></tr>
+                <tr><td class="text-left">非常感谢您订购产品，请根据以下收货单的内容仔细核对您所收到的产品。</td></tr>
+            </table>
+
+            <table style="border-collapse:collapse;border:1px solid #000;" class="table" cellspacing="0" cellpadding="3" border="1">
+                <tbody>
+                    <t>
+                        <tr>
+                            <td style=" border-bottom:1px solid #000; " width="6%" align="center">
+                                <b>序    号</b>
+                            </td>
+                            <td style=" border-bottom:1px solid #000; " width="6%" align="center">
+                                <b>物料编码</b>
+                            </td>
+                            <td style=" border-bottom:1px solid #000; " width="25%" align="center">
+                                <b>产品名称</b>
+                            </td>
+                            <td style=" border-bottom:1px solid #000; " width="25%" align="center">
+                                <b>品    牌</b>
+                            </td>
+                            <td style=" border-bottom:1px solid #000; " width="10%" align="center">
+                                <b>规格型号</b>
+                            </td>
+                            <td style=" border-bottom:1px solid #000; " width="6%" align="center">
+                                <b>包装单位</b>
+                            </td>
+                            <td style=" border-bottom:1px solid #000; " width="6%" align="center">
+                                <b>存储条件</b>
+                            </td>
+                            <td style=" border-bottom:1px solid #000; " width="16%" align="center">
+                                <b>实际发货数量</b>
+                            </td>
+                        </tr>
+                    </t>
+                    <tr t-foreach="o.move_lines" t-as="line">
+                        <td align="center"><t t-esc="line_index + 1"/></td>
+                        <td align="center"><t t-esc="line.product_id.default_code"/></td>
+                        <td align="center"><t t-esc="line.product_id.name"/></td>
+                        <td align="center"><t t-esc="line.product_id.brand_id.name"/></td>
+                        <td align="center"><t t-esc="line.product_id.product_model"/>
+                        </td>
+                        <td align="center"><t t-esc="line.product_id.uom_id.name"/></td>
+                        <td align="center"><span t-field="line.product_id.storage_condition"/></td>
+                        <td align="center"><t t-esc="line.product_uom_qty"/></td>
+                    </tr>
+                </tbody>
+            </table>
+        
+            <br/><br/><br/>
+            <table width="100%">
+                <tr>
+                    <td>
+                        <strong>请阁下务必对物流公司配送的货品当场依据合同中货物验收条款进行验收。如阁下在送货单上对货品进行了签收，彬谷科技将视为您对所配送的货品验收合格且接受。</strong>
+                    </td>
+                </tr>
+            </table>
+            <table style="margin-top:10px;" cellspacing="0" border="0">
+                <tbody>
+                    <tr>
+                        <td width="55%" valign="top">
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                        </td>
+
+                        <td>
+                            <br/> 客户签章：
+                            <br/>
+                            <br/>
+                            <br/> 日    期：
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            </center>
+            <br/>
+        </div>
+    </t>
+    </template>
+
+</data>
+</odoo>

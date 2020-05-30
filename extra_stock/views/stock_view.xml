@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="extra_stock_picking_form" model="ir.ui.view">
+            <field name="name">送货单增加字段</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+
+                <field name="origin" position="after">
+                    <field name="internal_comment" />
+                </field>
+
+                <xpath expr="//page[last()]" position="after">
+                    <page name='express_info' string='物流信息'>
+                        <field name="express_ids" attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}">
+                            <tree editable="bottom" delete="0">
+                                <field name="express_carrier" />
+                                <field name="express_num" />
+                                <field name="express_date" />
+                                <field name="express_note" />
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+
+                <xpath expr="//field[@name='pack_operation_product_ids']/tree/field[@name='product_id']" position="after">
+                    <field name="cat_no" />    
+                    <field name="brand_id" />
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="extra_stock_move_picking_form" model="ir.ui.view">
+            <field name="name">送货单增加字段</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_picking_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='product_id']" position="after">
+                    <field name="cat_no" />    
+                    <field name="brand_id" />
+                </xpath>
+            </field>
+        </record>
+
+        <record id="extra_stock_picking_tree" model="ir.ui.view">
+            <field name="name">送货单增加字段</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.vpicktree"/>
+            <field name="arch" type="xml">
+
+                <field name="state" position="before">
+                    <field name="internal_comment" />
+                </field>
+
+            </field>
+        </record>
+
+        <record id="extra_stock_warehouse_tree" model="ir.ui.view">
+            <field name="name">仓库增加具体地址</field>
+            <field name="model">stock.warehouse</field>
+            <field name="inherit_id" ref="stock.view_warehouse_tree"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="partner_address" readonly="1" />
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="extra_stock_warehouse_form" model="ir.ui.view">
+            <field name="name">仓库增加具体地址</field>
+            <field name="model">stock.warehouse</field>
+            <field name="inherit_id" ref="stock.view_warehouse"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="partner_address" readonly="1" />
+                </xpath>
+
+            </field>
+
+        </record>
+
+    </data>
+</odoo>

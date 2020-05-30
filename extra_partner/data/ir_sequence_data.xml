@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Sequences for partner supplier -->
+        <record id="seq_partner_supplier" model="ir.sequence">
+            <field name="name">Partner Supplier</field>
+            <field name="code">partner.supplier</field>
+            <field name="prefix">V</field>
+            <field name="padding">6</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Sequences for partner customer -->
+        <record id="seq_partner_customer" model="ir.sequence">
+            <field name="name">Partner Customer</field>
+            <field name="code">partner.customer</field>
+            <field name="prefix">C</field>
+            <field name="padding">6</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Sequences for partner -->
+        <record id="seq_extra_partner" model="ir.sequence">
+            <field name="name">Extra Partner</field>
+            <field name="code">extra.partner</field>
+            <field name="prefix">EX</field>
+            <field name="padding">7</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+    </data>
+</odoo>

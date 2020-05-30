@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_extra_quotation_sale_order_line_tree" model="ir.ui.view">
+            <field name="name">sale.order.line.tree</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form" />
+            <field name="arch" type="xml">
+            	<xpath expr="//field[@name='order_line']/tree/field[@name='currency_id']" position="after">
+            		<field name="external_comments" />
+            	</xpath>
+
+            	<xpath expr="//field[@name='order_line']/form/group/group/field[@name='price_subtotal']" position="after">
+            		<field name="external_comments" />
+            	</xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

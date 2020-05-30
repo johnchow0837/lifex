@@ -1,0 +1,766 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="purchase.report_purchaseorder_document">
+            <t t-foreach="docs" t-as="o">
+                <div class="header">
+                    <table width="100%" border="0" font-color="grey">
+                        <tr>
+                            <td width="30%" class="text-left"><b><font color="grey">望跃打印采购单</font></b></td>
+                            <td width="30%" class="text-center"><b><font color="grey">订单编号：<t t-esc="o.name"/></font></b></td>
+                            <td width="30%" class="text-right"><b><font color="grey"><ul class="list-inline">
+                                                                                        <li>第</li>
+                                                                                        <li><span class="page"/></li>
+                                                                                        <li>页</li>,
+                                                                                        <li>共</li>
+                                                                                        <li><span class="topage"/></li>
+                                                                                        <li>页</li>
+                                                                                        </ul></font></b></td>
+                        </tr>
+                    </table>
+                    <hr style="line-height:1px;height:1px;border-bottom:3px solid grey;margin:1px;"/>
+                </div>
+                <div class="page">
+                    <head>
+                    <meta HTTP-EQUIV="Content-Type" Content="text-html; charset=UTF-8"/>
+                    <title>打印合同</title>
+                    <style type="text/css">
+                    body{ font-family: arial; 
+                    }
+                    td { font-family: arial;
+                    }
+                    .noborder {height: 19px; font-size: 9pt; background-color: #FFFFFF; width:150px;
+                        border-left: #FFFFFF 1px solid; border-right: #FFFFFF 1px solid;
+                        border-top: #FFFFFF 1px solid; border-bottom: #000000 1px solid;
+                    }
+                    .noborder1 {height: 19px; font-size: 9pt; background-color: #FFFFFF; width:50px;
+                        border-left: #FFFFFF 1px solid; border-right: #FFFFFF 1px solid;
+                        border-top: #FFFFFF 1px solid; border-bottom: #000000 1px solid;
+                    }
+                    .noborder2 {height: 19px; font-size: 9pt; background-color: #FFFFFF; width:100px;
+                        border-left: #FFFFFF 1px solid; border-right: #FFFFFF 1px solid;
+                        border-top: #FFFFFF 1px solid; border-bottom: #000000 1px solid;
+                    }
+                    .faxnumber {height: 19px; font-size: 9pt; background-color: #FFFFFF; width:100px;
+                        border-left: #FFFFFF 1px solid; border-right: #FFFFFF 1px solid;
+                        border-top: #FFFFFF 1px solid; border-bottom: #FFFFFF 1px solid; font-weight=bold;
+                    }
+
+                        
+                    td {
+                        font-size: 13px; font-family: arial;
+                    }
+                    </style>
+                    </head>
+
+                    <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+                        <center>
+                        <table border="0" cellspacing="0" width="90%" bgcolor="#ffffff">
+                          <tr>
+                            <td width="240" height="100" valign="top">
+                                <img t-if="o.company_id.logo" t-att-src="'data:image/png;base64,%s' % o.company_id.logo" style="width:240;height:100" border="0"/>
+                            </td>
+                            <td align="center" valign="top">
+                                <font face="arial">
+                                    <h1>
+                                        采购订单
+                                    </h1>
+                                </font>
+                                <br/>
+                                <h3>
+                                    <t t-esc="o.name"/>
+                                </h3>
+                            </td>
+                                <td rowspan="2" style="text-align:right;">
+                                </td>
+                            </tr>
+                        </table>
+                        <br/>
+
+                    <table style="margin-top:10px;" cellspacing="0" border="0">
+                        <tbody><tr>
+                            <td width="55%" valign="top">
+                                <br/><strong t-esc="o.company_id.name"/>
+                                <br/><strong t-esc="o.company_id.street"/>
+                                <br/>供应商代码：<span t-esc="o.partner_id.supplier_guid"/>
+                                <br/>供应商名称：<span t-esc="o.partner_id.name"/>
+                                <br/> 联 系 人：<span t-esc="o.supplier_contact.name"/>
+                                <br/> 电    话：<span t-esc="o.supplier_contact.phone"/>
+                                <br/> 邮    箱：<span t-esc="o.supplier_contact.email"/>
+                                <br/> 地    址：<span t-esc="o.supplier_contact.street"/>
+                                <br/>
+                            </td>
+
+
+                            <td>
+                                <br/> 日    期：<span t-esc="datetime.datetime.strftime(datetime.datetime.strptime(o.confirm_date or o.date_order, '%Y-%m-%d %H:%M:%S') + datetime.timedelta(hours=8), '%Y-%m-%d')"/>
+                                <br/> 联 系 人：<span t-esc="o.create_uid.partner_id.name"/>
+                                <br/> 电    话：<span t-esc="o.create_uid.partner_id.phone"/>
+                                <br/> 邮    箱：<span t-esc="o.create_uid.partner_id.email"/>
+                                <br/> 地    址：<span t-esc="o.create_uid.partner_id.street"/>
+                                <br/>
+                                <br/>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td valign="top">
+                                <br/>
+                                <br/>
+                                <b>送货地址：
+                                <br/> 地    址：<span t-esc="o.partner_shipping_address"/></b>
+                                <br/> 联 系 人：<span t-esc="o.partner_shipping_name"/>
+                                <br/> 电    话：<span t-esc="o.partner_shipping_phone"/>
+                                <br/>
+                                <br/> 送货条款：
+                                <br/> 付款方式：<span t-esc="o.payment_term_id.name"/>
+                                <br/> 币    种：<span t-esc="o.currency_id.name"/>
+                            </td>
+                            <td>
+                                <br/>
+                                <br/>
+                                <b>寄发票地址
+                                <br/> 地    址：上海市浦东新区蔡伦路85弄95号九洲中心109-113室</b>
+                                <br/> 联 系 人：<span t-esc="o.create_uid.partner_id.name"/>
+                                <br/> 电    话：<span t-esc="o.create_uid.partner_id.phone"/>
+                                <br/> 邮    箱：<span t-esc="o.create_uid.partner_id.email"/>
+                                <br/> 地    址：<span t-esc="o.create_uid.partner_id.street"/>
+                                <br/>
+                                <br/>
+                            </td>
+                        </tr>
+                    </tbody>
+                    </table>
+
+                    <table style="border-collapse:collapse;margin-top:10px;border:1px solid #000;" class="table" width="640" cellspacing="0" cellpadding="3" border="1">
+                        <tbody>
+                            <tr>
+                                <td style=" border-bottom:1px solid #000; " width="30" align="center">
+                                    <b>行    号</b>
+                                </td>
+                                <td style=" border-bottom:1px solid #000; " width="55" align="center">
+                                    <b>物料编码</b>
+                                </td>
+                                <td style=" border-bottom:1px solid #000; " width="45" align="center">
+                                    <b>产品名称</b>
+                                </td>
+                                <td style=" border-bottom:1px solid #000; " width="35" align="center">
+                                    <b>品    牌</b>
+                                </td>
+                                <td style=" border-bottom:1px solid #000; " width="35" align="center">
+                                    <b>原厂货号</b>
+                                </td>
+                                <td style=" border-bottom:1px solid #000; " width="35" align="center">
+                                    <b>数    量</b>
+                                </td>
+                                <td style=" border-bottom:1px solid #000; " width="35" align="center">
+                                    <b>单    位</b>
+                                </td>
+                                <td style=" border-bottom:1px solid #000; " width="45" align="center">
+                                    <b>含税单价</b>
+                                </td>
+                                <td style=" border-bottom:1px solid #000; " width="45" align="center">
+                                    <b>含税总价</b>
+                                </td>
+                                <td style=" border-bottom:1px solid #000; " width="45" align="center">
+                                    <b>交货日期</b>
+                                </td>
+                            </tr>
+                            <tr t-foreach="o.order_line" t-as="order_line">
+                                <td align="center"><t t-esc="order_line_index + 1"/></td>
+                                <td align="center"><span t-esc="order_line.product_id.default_code"/></td>
+                                <td align="center"><span t-esc="order_line.product_id.name"/></td>
+                                <td align="center"><span t-esc="order_line.product_id.brand_id.name"/></td>
+                                <td><span t-esc="order_line.product_id.cat_no"/></td>
+                                <td align="center"><span t-field="order_line.product_qty"/></td>
+                                <td align="center"><span t-field="order_line.product_uom"/></td>
+                                <td align="center"><span t-field="order_line.price_unit"/></td>
+                                <td align="center"><span t-field="order_line.price_total"/></td>
+                                <td align="center">
+                                <span t-esc="datetime.datetime.strftime(datetime.datetime.strptime(order_line.date_planned, '%Y-%m-%d %H:%M:%S')+datetime.timedelta(hours=8), '%Y-%m-%d')"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <table style="margin-top:20px;" width="100%" cellspacing="0" border="0" align="left">
+                        <tr>
+                        <td align="left">
+                            <table class="table" width="100%" cellspacing="0" border="0">
+                                    <tr height="20">
+                                        <td width="50%" align="left">税前金额</td>
+                                        <td align="center"><span t-esc="o.amount_untaxed"/></td>
+                                    </tr>
+                                    <tr height="20">
+                                        <td align="left">增值税税额</td>
+                                        <td align="center">
+                                            <span t-esc="o.amount_tax"/>
+                                            <t t-if="o.mapped('order_line.taxes_id')">
+                                            (<span t-esc="o.mapped('order_line.taxes_id')[0].amount"/>%)
+                                            </t>
+                                        </td>
+                                    </tr>
+                                    <tr height="20">
+                                        <td align="left">价税合计(<span t-esc="o.currency_id.name"/>)</td>
+                                        <td align="center"><span t-esc="o.amount_total"/></td>
+                                    </tr>
+                            </table>
+                        </td>
+                        </tr>
+                    </table>
+
+                    <br/><br/><br/>
+
+                    <table style="margin-top:10px;" cellspacing="0" border="0">
+                        <tr>
+                            <td>
+                                <b>开票信息</b>
+                                <br/>发票类型：<t t-if="o.mapped('order_line.taxes_id')">
+                                                    <span t-esc="o.mapped('order_line.taxes_id')[0].amount"/>%增值税专用发票
+                                                </t>
+                                                <t t-if="not o.mapped('order_line.taxes_id')">
+                                                    <span>普通发票</span>
+                                                </t>
+                                <br/>公司注册名：上海望跃科技有限公司
+                                <br/>注册电话：13515818364
+                                <br/>注册地址：上海市奉贤区西闸公路1036号1幢
+                                <br/>税    号：91310120MA1HTPQW8J
+                                <br/>开 户 行：上海银行股份有限公司张江支行
+                                <br/>帐    号：03003983926
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>订单确认后请签字盖章回传
+                                <br/>务必随货放置望跃送货单 
+                                <br/>所有相关信件及发票上必须标有采购单号和望跃物料编号
+                            </td>
+                            <td width="20%"/>
+                            <td>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/> 买    方：<span t-esc="o.company_id.name"/>
+                                <br/>
+                                <br/> 买方签字：________________日  期:_____________
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/> 卖    方：<span t-esc="o.partner_id.name"/>
+                                <br/> 
+                                <br/> 卖方签字：________________日  期:_____________
+                            </td>
+                        </tr>
+                    </table>
+
+<!--                     <table style="margin-top:10px;" cellspacing="0" border="0">
+                        <tbody><tr>
+                            <td width="55%" valign="top">
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>
+                            </td>
+
+                            <td>
+                                <br/> 买    方：<span t-esc="o.company_id.name"/>
+                                <br/>
+                                <br/> 买方签字：________________日  期:_____________
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/> 卖    方：<span t-esc="o.partner_id.name"/>
+                                <br/> 
+                                <br/> 卖方签字：________________日  期:_____________
+                                <br/>
+                                <br/>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table> -->
+                    </center>
+                </body>
+            </div>
+
+
+
+            <!-- <t t-if="o.currency_id.name != 'CNY'">
+                <div class="header">
+                    <table width="100%" border="0" font-color="grey">
+                        <tr>
+                            <td width="30%" class="text-left"><b><font color="grey">Bingo Print</font></b></td>
+                            <td width="30%" class="text-center"><b><font color="grey">Po No：<t t-esc="o.name"/></font></b></td>
+                            <td width="30%" class="text-right"><b><font color="grey"><ul class="list-inline">
+                                                                                        <li><span class="page"/></li>
+                                                                                        <li>/</li>
+                                                                                        <li><span class="topage"/></li>
+                                                                                        </ul></font></b></td>
+                        </tr>
+                    </table>
+                    <hr style="line-height:1px;height:1px;border-bottom:3px solid grey;margin:1px;"/>
+                </div>
+                <div class="page">
+                    <head>
+                    <meta HTTP-EQUIV="Content-Type" Content="text-html; charset=UTF-8"/>
+                    <title>打印合同</title>
+                    <style type="text/css">
+                    body{ font-family: arial; 
+                    }
+                    td { font-family: arial;
+                    }
+                    .noborder {height: 19px; font-size: 9pt; background-color: #FFFFFF; width:150px;
+                        border-left: #FFFFFF 1px solid; border-right: #FFFFFF 1px solid;
+                        border-top: #FFFFFF 1px solid; border-bottom: #000000 1px solid;
+                    }
+                    .noborder1 {height: 19px; font-size: 9pt; background-color: #FFFFFF; width:50px;
+                        border-left: #FFFFFF 1px solid; border-right: #FFFFFF 1px solid;
+                        border-top: #FFFFFF 1px solid; border-bottom: #000000 1px solid;
+                    }
+                    .noborder2 {height: 19px; font-size: 9pt; background-color: #FFFFFF; width:100px;
+                        border-left: #FFFFFF 1px solid; border-right: #FFFFFF 1px solid;
+                        border-top: #FFFFFF 1px solid; border-bottom: #000000 1px solid;
+                    }
+                    .faxnumber {height: 19px; font-size: 9pt; background-color: #FFFFFF; width:100px;
+                        border-left: #FFFFFF 1px solid; border-right: #FFFFFF 1px solid;
+                        border-top: #FFFFFF 1px solid; border-bottom: #FFFFFF 1px solid; font-weight=bold;
+                    }
+
+                        
+                    td {
+                        font-size: 13px; font-family: arial;
+                    }
+                    </style>
+                    </head>
+
+                    <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+                        <center>
+                        <table width="640" border="0" cellspacing="0" bgcolor="#ffffff">
+                          <tr>
+                            <td width="300" height="50" valign="bottom">
+                                <img t-if="o.company_id.logo" t-att-src="'data:image/png;base64,%s' % o.company_id.logo" style="max-height:60px;width:auto" border="0"/>
+                            </td>
+                            <td align="right" valign="bottom">
+                                <font face="arial">
+                                    <h1>
+                                        Purchase Order
+                                    </h1>
+                                </font>
+                            </td>
+                                <td rowspan="2" style="text-align:right;">
+                                </td>
+                            </tr>
+                        </table>
+                        <br/>
+
+                    <table style="margin-top:10px;" cellspacing="0" border="0">
+                        <tbody><tr>
+                            <td width="55%" valign="top">
+                                <br/>Bingo Scientific （Shanghai）Co., Ltd.
+                                <br/><span t-esc="o.company_id.street"/>
+                                <br/>Vendor Code:<span t-esc="o.partner_id.supplier_guid"/>
+                                <br/>Address:<span t-esc="o.partner_id.street"/>
+                                <br/>Contact Person:<span t-esc="o.partner_shipping_id.name"/>
+                                <br/>Telephone:<span t-esc="o.partner_shipping_id.phone"/>
+                                <br/>
+                            </td>
+
+
+                            <td>
+                                <br/> Date:<span t-esc="o.date_order"/>
+                                <br/> Contact Person:<span t-esc="o.company_id.name"/>
+                                <br/> Telephone:<span t-esc="o.company_id.phone"/>
+                                <br/> E-mail:<span t-esc="o.company_id.email"/>
+                                <br/> Address:<span t-esc="o.company_id.street"/>
+                                <br/>
+                                <br/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="top">
+                                <b>Please deliver to:
+                                <br/> Address:<span t-esc="o.partner_shipping_id.street"/></b>
+                                <br/> Contact Person:<span t-esc="o.partner_shipping_id.name"/>
+                                <br/> Telephone:<span t-esc="o.partner_shipping_id.phone"/>
+                                <br/>
+                                <br/> Terms of delivery：
+                                <br/> Terms of payment：<span t-esc="o.payment_term_id.name"/>
+                                <br/> 币    种：<span t-esc="o.currency_id.name"/>
+                            </td>
+                            <td>
+                                <b>寄发票地址
+                                <br/> 地    址：上海市浦东新区蔡伦路85弄95号九洲中心109-113室</b>
+                                <br/> 联 系 人：<span t-esc="o.company_id.name"/>
+                                <br/> 电    话：<span t-esc="o.company_id.phone"/>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>
+                            </td>
+                        </tr>
+                    </tbody>
+                    </table>
+
+                    <table style="border-collapse:collapse;margin-top:10px;border:1px solid #000;" class="table" width="640" cellspacing="0" cellpadding="3" border="1">
+                        <tbody>
+                            <tr>
+                                <td style=" border-bottom:1px solid #000; " width="30" align="center">
+                                    <b>行    号</b>
+                                </td>
+                                <td style=" border-bottom:1px solid #000; " width="55" align="center">
+                                    <b>物料编码</b>
+                                </td>
+                                <td style=" border-bottom:1px solid #000; " width="45" align="center">
+                                    <b>产品名称</b>
+                                </td>
+                                <td style=" border-bottom:1px solid #000; " width="35" align="center">
+                                    <b>品    牌</b>
+                                </td>
+                                <td style=" border-bottom:1px solid #000; " width="35" align="center">
+                                    <b>原厂货号</b>
+                                </td>
+                                <td style=" border-bottom:1px solid #000; " width="35" align="center">
+                                    <b>数    量</b>
+                                </td>
+                                <td style=" border-bottom:1px solid #000; " width="35" align="center">
+                                    <b>单    位</b>
+                                </td>
+                                <td style=" border-bottom:1px solid #000; " width="45" align="center">
+                                    <b>含税单价</b>
+                                </td>
+                                <td style=" border-bottom:1px solid #000; " width="45" align="center">
+                                    <b>含税总价</b>
+                                </td>
+                                <td style=" border-bottom:1px solid #000; " width="45" align="center">
+                                    <b>交货日期</b>
+                                </td>
+                            </tr>
+                            <tr t-foreach="o.order_line" t-as="order_line">
+                                <td align="center"><t t-esc="order_line_index + 1"/></td>
+                                <td align="center"><span t-esc="order_line.product_id.default_code"/></td>
+                                <td align="center"><span t-esc="order_line.product_id.name"/></td>
+                                <td align="center"><span t-esc="order_line.product_id.brand_id.name"/></td>
+                                <td><span t-esc="order_line.product_id.cat_no"/></td>
+                                <td align="center"><span t-field="order_line.product_qty"/></td>
+                                <td align="center"><span t-field="order_line.product_uom" /></td>
+                                <td align="center"><span t-field="order_line.price_unit"/></td>
+                                <td align="center"><span t-field="order_line.price_total"/></td>
+                                <td align="center">
+                                <span t-esc="datetime.datetime.strftime(datetime.datetime.strptime(order_line.date_planned, '%Y-%m-%d %H:%M:%S')+datetime.timedelta(hours=8), '%Y-%m-%d %H:%M:%S')"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <table style="margin-top:20px;" width="100%" cellspacing="0" border="0" align="left">
+                        <tr>
+                        <td align="left">
+                            <table class="table" width="100%" cellspacing="0" border="0">
+                                    <tr height="20">
+                                        <td width="50%" align="left">税前金额</td>
+                                        <td align="center"><span t-esc="o.amount_untaxed"/></td>
+                                    </tr>
+                                    <tr height="20">
+                                        <td align="left">增值税税额</td>
+                                        <td align="center">
+                                            <span t-esc="o.amount_tax" />
+                                            <t t-if="o.mapped('order_line.taxes_id')">
+                                            (<span t-esc="o.mapped('order_line.taxes_id')[0].amount"/>%)
+                                            </t>
+                                        </td>
+                                    </tr>
+                                    <tr height="20">
+                                        <td align="left">价税合计(<span t-esc="o.currency_id.name"/>)</td>
+                                        <td align="center"><span t-esc="o.amount_total"/></td>
+                                    </tr>
+                            </table>
+                        </td>
+                        </tr>
+                    </table>
+
+                    <br/><br/><br/>
+
+                    <table style="margin-top:10px;" cellspacing="0" border="0">
+                        <tr>
+                            <td>
+                                <b>开票信息</b>
+                                <br/>发票类型：<t t-if="o.mapped('order_line.taxes_id')">
+                                                    <span t-esc="o.mapped('order_line.taxes_id')[0].amount"/>%增值税专用发票
+                                                </t>
+                                                <t t-if="not o.mapped('order_line.taxes_id')">
+                                                    <span>普通发票</span>
+                                                </t>
+                                <br/>公司注册名：彬谷科技（上海）有限公司
+                                <br/>注册电话：021-50582219
+                                <br/>注册地址：上海市浦东新区蔡伦路85弄95号九洲中心109-113室
+                                <br/>税    号：91310113MA1GML7R6M
+                                <br/>开 户 行：上海银行张江支行
+                                <br/>帐    号：03003630381
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>订单确认后请签字回传
+                                <br/>务必随货放置彬谷送货单 
+                                <br/>所有相关信件及发票上必须标有采购单号和彬谷物料编号
+                            </td>
+                        </tr>
+                    </table>
+
+                    <table style="margin-top:10px;" cellspacing="0" border="0">
+                        <tbody><tr>
+                            <td width="55%" valign="top">
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>
+                            </td>
+
+                            <td>
+                                <br/> 买    方：<span t-esc="o.company_id.name"/>
+                                <br/>
+                                <br/> 买方签字：________________日  期:_____________
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/> 卖    方：<span t-esc="o.partner_id.name"/>
+                                <br/> 
+                                <br/> 卖方签字：________________日  期:_____________
+                                <br/>
+                                <br/>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    </center>
+                </body>
+            </div>
+            </t>
+            </t> -->
+        </t>
+        </template>
+
+    <template id="purchase.report_purchasequotation_document">
+      <t t-set="o" t-value="o.with_context({'lang':o.partner_id.lang})"/>
+
+        <div class="header">
+            <table width="100%" border="0" font-color="grey">
+                <tr>
+                    <td width="30%" class="text-left"><b><font color="grey">望跃打印送货单</font></b></td>
+                    <td width="30%" class="text-center"><b><font color="grey">送货单编号：<t t-esc="o.name"/></font></b></td>
+                    <td width="30%" class="text-right"><b><font color="grey"><ul class="list-inline">
+                                                                                <li>第</li>
+                                                                                <li><span class="page"/></li>
+                                                                                <li>页</li>,
+                                                                                <li>共</li>
+                                                                                <li><span class="topage"/></li>
+                                                                                <li>页</li>
+                                                                                </ul></font></b></td>
+                </tr>
+            </table>
+            <hr style="line-height:1px;height:1px;border-bottom:3px solid grey;margin:1px;"/>
+        </div>
+        <div class="page">
+            <style type="text/css">
+                    .title_font {
+                        font-size: 20px; font-family: arial;
+                    }
+            </style>
+            <center>
+
+            <table width="90%" border="0" cellspacing="0" bgcolor="#ffffff">
+                <tr>
+                    <td width="270" height="120" valign="bottom">
+                        <img t-if="o.company_id.logo" t-att-src="'data:image/png;base64,%s' % o.company_id.logo" style="width:270;height:120" border="0"/>
+                    </td>
+                    <td align="right" valign="bottom">
+                    <font face="arial">
+                    <h2>
+                    <t t-esc="o.company_id.name" />
+                    </h2>
+                    <br/>
+                    <b>
+                    售后热线：400-920-3909
+                    </b>
+                    </font>
+                    </td>
+                    <td rowspan="2" style="text-align:right;">  
+                    </td>
+                </tr>
+            </table>
+            <br/><br/><br/>
+
+            <table style="font-size:14px;width:100%;">
+                <tr>
+                    <td style="vertical-align:middle;width:30%;">
+                        <img src="/ehsy_stock_purchase_02/static/img/logo.png" border="0"/>
+                    </td>
+                    <td style="text-align:center;width:40%;">
+                       <h2>送货清单</h2>
+                    </td>
+                    <td style="vertical-align:middle;width:30%;">
+                    </td>
+                </tr>
+            </table>
+            <hr style="line-height:1px;height:1px;border:none;border-bottom:3px solid #454545;margin:1px;"/>
+            <t t-set="sale_id" t-value="o.get_sale_order()" />
+            <t t-set="receiver_info" t-value="o.get_sale_receiver_info()" />
+            <table style="font-size:14px;width:100%;" class="title_font">
+                <tr>
+                    <td width="15%" align="left">客户：</td>
+                    <td width="55%" align="left"><t t-esc="sale_id and sale_id[0].partner_id.name"/></td>
+
+                    <td width="15%" align="left">发货日期：</td>
+                    <td width="15%" align="left"><t t-esc="(datetime.datetime.now() + datetime.timedelta(hours=8)).strftime('%Y-%m-%d')"/></td>
+                </tr>
+                <tr>
+                    <td width="15%" align="left">收货人：</td>
+                    <td width="55%" align="left">
+                        <t t-esc="receiver_info['name']" />
+                    </td>
+
+                    <td width="15%" align="left">销售人员：</td>
+                    <td width="15%" align="left">
+                        <t t-esc="sale_id and sale_id[0].user_id.name or ''" />
+                    </td>
+                </tr>
+                <tr>
+                    <td width="15%" align="left">送货地址：</td>
+                    <td width="55%" align="left"><t t-esc="receiver_info['street']"/></td>
+
+                    <td width="15%" align="left">客户单号：</td>
+                    <td width="15%" align="left">
+                        <!-- <t t-esc="'\n'.join(sale_id.mapped('contract_num')) or '\n'.join(sale_id.name) or o.origin"/> -->
+                        <t t-esc="o.get_sale_contract()"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="15%" align="left">联系方式：</td>
+                    <td width="55%" align="left"><t t-esc="receiver_info['phone']"/></td>
+
+                    <td width="15%" align="left"></td>
+                    <td width="15%" align="left">
+                        <!-- <t t-esc="sale_id.user_id.name or ''" /> -->
+                    </td>
+                </tr>
+
+            </table>
+
+            <table style="font-size:14px;width:100%;">
+                <tr><td class="text-left">尊敬的阁下：</td></tr>
+                <tr><td class="text-left">非常感谢您订购产品，请根据以下收货单的内容仔细核对您所收到的产品。</td></tr>
+            </table>
+
+            <table style="border-collapse:collapse;border:1px solid #000;" class="table" cellspacing="0" cellpadding="3" border="1">
+                <tbody>
+                    <t>
+                        <tr>
+                            <td style=" border-bottom:1px solid #000; " width="6%" align="center">
+                                <b>序    号</b>
+                            </td>
+                            <td style=" border-bottom:1px solid #000; " width="6%" align="center">
+                                <b>物料编码</b>
+                            </td>
+                            <td style=" border-bottom:1px solid #000; " width="25%" align="center">
+                                <b>产品名称</b>
+                            </td>
+                            <td style=" border-bottom:1px solid #000; " width="25%" align="center">
+                                <b>品    牌</b>
+                            </td>
+                            <td style=" border-bottom:1px solid #000; " width="10%" align="center">
+                                <b>规格型号</b>
+                            </td>
+                            <td style=" border-bottom:1px solid #000; " width="6%" align="center">
+                                <b>包装单位</b>
+                            </td>
+                            <td style=" border-bottom:1px solid #000; " width="6%" align="center">
+                                <b>存储条件</b>
+                            </td>
+                            <td style=" border-bottom:1px solid #000; " width="16%" align="center">
+                                <b>数量</b>
+                            </td>
+                        </tr>
+                    </t>
+                    <tr t-foreach="o.order_line" t-as="line">
+                        <td align="center"><t t-esc="line_index + 1"/></td>
+                        <td align="center"><t t-esc="line.product_id.default_code"/></td>
+                        <td align="center"><t t-esc="line.product_id.name"/></td>
+                        <td align="center"><t t-esc="line.product_id.brand_id.name"/></td>
+                        <td align="center"><t t-esc="line.product_id.product_model"/>
+                        </td>
+                        <td align="center"><t t-esc="line.product_id.uom_id.name"/></td>
+                        <td align="center"><span t-field="line.product_id.storage_condition"/></td>
+                        <td align="center"><t t-esc="line.product_qty"/></td>
+                    </tr>
+                </tbody>
+            </table>
+            <table style="margin-top:10px;" width="100%" cellspacing="0" border="0">
+                <tbody>
+                    <tr>
+                        <td width="70%" valign="top">
+                            <br/>
+                            <br/>
+                        </td>
+                        <td width="20%" valign="top">
+                            <br/>数量：
+                            <br/>
+                        </td>
+                        <td width="10%" valign="top">
+                            <br/><t t-esc="sum([l.product_qty for l in o.order_line])" />
+                            <br/>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <br/><br/><br/>
+            <table style="margin-top:10px;" cellspacing="0" border="0">
+                <tbody>
+                    <tr>
+                        <td width="55%" valign="top">
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                        </td>
+
+                        <td>
+                            <br/> 收 货 人：
+                            <br/>
+                            <br/>
+                            <br/> 收货日期：
+                            <br/> 
+                            <br/>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            </center>
+            <br/>
+        </div>
+    </template>
+
+    </data>
+</odoo>

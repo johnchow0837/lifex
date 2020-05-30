@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="extra_sale_order_form" model="ir.ui.view">
+            <field name="name">销售单增加字段</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//header" position="inside">
+                    <button name="action_commit" string="销售提交" states='draft' type="object" groups="extra_sale.group_sale_user"/>
+                    <button name="action_approve" string="经理审批" states='to_approve' type="object" groups="extra_sale.group_sale_manager"/>
+                    <button name="action_not_approve" string="经理驳回" states='to_approve' type="object" groups="extra_sale.group_sale_manager"/>
+                    <button name="action_validate" string="老板审批" states='to_validate' type="object" groups="extra_sale.group_sale_boss"/>
+                    <button name="action_not_validate" string="老板驳回" states='to_validate' type="object" groups="extra_sale.group_sale_boss"/>
+
+                    <button name="action_salesup_confirm" string="销售助理确认" states='to_salesup_confirm' type="object" groups="extra_sale.group_sale_support"/>
+                    <button name="action_not_salesup_confirm" string=" 销售助理驳回" states='to_salesup_confirm' type="object" groups="extra_sale.group_sale_support"/>
+
+                    <button name="action_confirm" string="销售确认" states='to_confirm' type="object" groups="extra_sale.group_sale_user"/>
+                    <button name="action_reset_to_draft" string="销售重置" states='to_confirm' type="object" groups="extra_sale.group_sale_user"/>
+                    <button name="action_unlock" string="解锁订单" states='done' type="object" groups="extra_sale.group_sale_manager"/>
+                    <button name="export_excel" string='导出报价单' states='draft' type="object"/>
+                    <button name="sync_so_update" string='同步销售单到OPC' type="object" class='btn-danger'/>
+                </xpath>
+
+                <xpath expr="//button[@name='action_cancel']" position="attributes">
+                    <attribute name="confirm">确认取消销售单？</attribute>
+                </xpath>
+
+                <field name="pricelist_id" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+
+                <field name="payment_term_id" position="attributes">
+                    <attribute name="attrs">{'readonly': [('state', '=', 'done')]}</attribute>
+                    <attribute name="required">1</attribute>
+                    <attribute name="domain">[('payment_type', '=', 'sale')]</attribute>
+                </field>
+
+                <xpath expr="//field[@name='payment_term_id']" position="after">
+                    <field name="contract_num" />
+                    <field name="request_quotation_id" options="{'no_open': True, 'no_create': True}"/>
+                    <field name="required_currency" options="{'no_open': True, 'no_create': True}"/>
+                    <field name="predict_margin_rate" />
+                    <field name="approve_reason" />
+                    <field name="purchase_comment" />
+                    <field name="internal_comment" />
+                    <field name="last_sync_time" />
+                </xpath>
+
+                <xpath expr="//group[@name='sale_shipping']/field[@name='warehouse_id']" position="attributes">
+                    <attribute name='attrs'>{'readonly': [('state', '!=', 'to_confirm')]}</attribute>
+                    <attribute name='options'>{'no_create': True, 'no_open': True}</attribute>
+                </xpath>
+
+                <xpath expr="//group[@name='sale_shipping']/field[@name='warehouse_id']" position="after">
+                    <field name="shipment_method" attrs="{'required': [('state', 'in', ('sale', 'done'))]}"/>
+                </xpath>
+
+                <xpath expr="//field[@name='partner_id']" position="attributes">
+                    <attribute name="options">{'no_open': True, 'no_create': True}</attribute>
+                    <attribute name="domain">[('customer', '=', True), ('parent_id', '=', False)]</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='partner_invoice_id']" position="attributes">
+                    <attribute name="options">{'no_open': True, 'no_create': True}</attribute>
+                    <attribute name="domain">['|', '&amp;', ('parent_id', '=', partner_id), ('type', '=', 'invoice'), ('id', '=', partner_id)]</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='partner_invoice_id']" position="after">
+                    <field name="receipt_address_info_name" />
+                    <field name="receipt_address_info_mobile" />
+                    <field name="receipt_address_info_telephone" />
+                    <field name="receipt_address_info_address" />
+                    <field name="receipt_address_info_postcode" />
+                </xpath>
+
+                <xpath expr="//field[@name='partner_shipping_id']" position="attributes">
+                    <attribute name="options">{'no_open': True, 'no_create': True}</attribute>
+
+                    <attribute name="domain">['|', '&amp;', ('parent_id', '=', partner_id), ('type', '=', 'delivery'), ('id', '=', partner_id)]</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='partner_shipping_id']" position="after">
+                    <field name="address_info_name" />
+                    <field name="address_info_company_name" />
+                    <field name="address_info_mobile" />
+                    <field name="address_info_telephone" />
+                    <field name="address_info_address" />
+                    <field name="address_info_postcode" />
+                    <field name="partner_contact_id"  required="1" options="{'no_open': True, 'no_create': True}" domain="['|', '&amp;', ('parent_id', '=', partner_id), ('type', '=', 'contact'), ('id', '=', partner_id)]" />
+                    <field name="partner_contact_phone" />
+                    <field name="partner_contact_address" />
+                </xpath>
+
+                <xpath expr="//field[@name='order_line']/form/group/group/field[@name='product_id']" position="attributes">
+                    <attribute name="options">{'no_open': True, 'no_create': True}</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='order_line']/tree/field[@name='product_id']" position="after">
+                    <field name="comment_desc_cn" />
+                    <field name="cat_no" />    
+                    <field name="brand_id" />
+                </xpath>
+
+                <xpath expr="//field[@name='order_line']/form/group/group/field[@name='product_id']" position="after">
+                    <field name="comment_desc_cn" />
+                    <field name="cat_no" />    
+                    <field name="brand_id" />
+                </xpath>
+
+                <xpath expr="//field[@name='order_line']/form/group/group/div/field[@name='product_uom']" position="attributes">
+                    <attribute name="options">{'no_open': True, 'no_create': True}</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='order_line']/form/group/group/field[@name='tax_id']" position="attributes">
+                    <attribute name="options">{'no_open': True, 'no_create': True}</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='order_line']/form/group/group/field[@name='route_id']" position="attributes">
+                    <attribute name="options">{'no_open': True, 'no_create': True}</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='order_line']/form/group/group/field[@name='product_packaging']" position="attributes">
+                    <attribute name="options">{'no_open': True, 'no_create': True}</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='order_line']/form/div/field[@name='invoice_lines']" position="attributes">
+                    <attribute name="readonly">1</attribute>
+                </xpath>
+
+                <xpath expr="//button[@name='%(sale.action_view_sale_advance_payment_inv)d']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//button[@name='%(sale.action_view_sale_advance_payment_inv)d']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//button[@name='action_quotation_send'][@states='draft']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//button[@name='action_quotation_send'][@states='sent,sale']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//button[@name='action_confirm'][@states='sent']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//button[@name='print_quotation'][@states='draft']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//button[@name='print_quotation'][@states='sent,sale']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//button[@name='action_confirm'][@states='draft']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//button[@name='action_draft']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='order_line']/form/group/group/field[@name='price_unit']" position="before">
+                    <field name="sale_price" />
+                    <field name="cost_price" />
+                </xpath>
+
+                <xpath expr="//field[@name='order_line']/tree/field[@name='price_unit']" position="after">
+                    <!-- <field name="price_unit_untaxed" /> -->
+                    <field name="sale_price" />
+                    <field name="cost_price" />
+                </xpath>
+
+                <xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='order_line']/tree/field[@name='price_total']" position="before">
+                    <field name="price_subtotal" string='未税总计'/>
+                </xpath>
+
+                <xpath expr="//page[last()]" position="after">
+                    <page name='webinfo' string='网站信息'>
+                    <group>
+                        <group string="支付信息">
+                            <field name="saler_user_id" />
+                            <field name="saler_user_name" />
+                            <field name="pay_time" />
+                            <field name="pay_way_name" />
+                            <field name="pay_amount" />
+                            <field name="pay_transaction_no" />
+                            <field name="bank_account_name" />
+                            <field name="pay_type" />
+                            <field name="pay_way" />
+                            <field name="pay_status" />
+                        </group>
+                        <group string="其他信息">
+                            <field name="create_time" />
+                            <field name="delivery_time_type" />
+                            <field name="order_type" />
+                            <field name="remark" />
+                            <field name="carrier" />
+                            <field name="discount_amount" />
+                            <field name="transfer_amount" />
+                            <field name="total_amount" />
+                        </group>
+                    </group>
+                    <group>
+                        <group string='开票信息'>
+                            <field name="receipt_type" />
+                            <field name="receipt_info_receipt_sub_type" />
+                            <field name="receipt_info_receipt_com_name" />
+                            <field name="receipt_info_receipt_tax_no" />
+                            <field name="receipt_info_receipt_com_addr" />
+                            <field name="receipt_info_receipt_account" />
+                            <field name="receipt_info_receipt_tel" />
+                            <field name="receipt_info_receipt_bank_name" />
+                        </group>
+                    </group>
+                    </page>
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="sale.action_orders" model="ir.actions.act_window">
+            <field name="name">Sales Orders</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
+            <field name="search_view_id" ref="sale.sale_order_view_search_inherit_sale"/>
+            <field name="context">{}</field>
+            <field name="domain">[('state', 'not in', ('draft', 'sent', 'cancel')), ('user_id', '=', uid)]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Create a Quotation, the first step of a new sale.
+                </p><p>
+                    Once the quotation is confirmed, it becomes a sales order.
+                    You'll be able to invoice it and collect payments.
+                    From the <i>Sales Orders</i> menu, you can track delivery
+                    orders or services.
+                </p>
+            </field>
+        </record>
+
+        <record id="sale.action_quotations" model="ir.actions.act_window">
+            <field name="name">Quotations</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="sale.view_quotation_tree"/>
+            <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
+            <field name="search_view_id" ref="sale.sale_order_view_search_inherit_quotation"/>
+            <field name="context">{'hide_sale': True}</field>
+            <field name="domain">[('user_id', '=', uid)]</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Create a Quotation, the first step of a new sale.
+              </p><p>
+                Your next actions should flow efficiently: confirm the Quotation
+                to a Sale Order, then create the Invoice and collect the Payment.
+              </p><p>
+                Note that once a Quotation becomes a Sale Order, it will be moved
+                from the Quotations list to the Sales Order list.
+              </p>
+            </field>
+        </record>
+
+        <record id="all_action_orders" model="ir.actions.act_window">
+            <field name="name">销售单审批</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="sale.view_quotation_tree"/>
+            <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
+            <field name="search_view_id" ref="sale.sale_order_view_search_inherit_quotation"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Create a Quotation, the first step of a new sale.
+              </p><p>
+                Your next actions should flow efficiently: confirm the Quotation
+                to a Sale Order, then create the Invoice and collect the Payment.
+              </p><p>
+                Note that once a Quotation becomes a Sale Order, it will be moved
+                from the Quotations list to the Sales Order list.
+              </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_all_sale_quotations"
+                action="all_action_orders" parent="sales_team.menu_sales"
+                sequence="13" groups="extra_sale.group_sale_support,extra_sale.group_sale_manager,extra_sale.group_sale_boss"/>
+
+        <record id="extra_sale_order_tree" model="ir.ui.view">
+            <field name="name">报价单增加字段</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_quotation_tree"/>
+            <field name="arch" type="xml">
+                <field name="amount_total" position="after">
+                    <field name="predict_margin_rate" />
+                </field>
+                <field name="state" position="after">
+                    <field name="approve_reason" />
+                </field>
+            </field>
+        </record>
+
+        <record id="extra_sale_order_sale_tree" model="ir.ui.view">
+            <field name="name">销售单增加字段</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_tree"/>
+            <field name="arch" type="xml">
+                <field name="amount_total" position="after">
+                    <field name="predict_margin_rate" />
+                </field>
+            </field>
+        </record>
+
+        <record id="extra_account_customer_invoice_form" model="ir.ui.view">
+            <field name="name">销售发票增加字段</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+                <field name="date_due" position="after">
+                    <field name="internal_comment" />
+                </field>
+
+                <button name="action_invoice_cancel" position="attributes">
+                    <attribute name="groups">base.group_no_one,extra_sale.group_sale_manager</attribute>
+                </button>
+            </field>
+        </record>
+
+        <record id="extra_account_customer_invoice_tree" model="ir.ui.view">
+            <field name="name">销售发票增加字段</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_tree"/>
+            <field name="arch" type="xml">
+                <field name="state" position="before">
+                    <field name="internal_comment" />
+                </field>
+            </field>
+        </record>
+
+    </data>
+</odoo>

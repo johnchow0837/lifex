@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="extra_procurement_rule_form" model="ir.ui.view">
+            <field name="name">补货规则增加自动运行字段</field>
+            <field name="model">procurement.rule</field>
+            <field name="inherit_id" ref="procurement.view_procurement_rule_form"/>
+            <field name="arch" type="xml">
+            	<field name="sequence" position="after">
+            		<field name="auto_run" />
+            	</field>
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_quotation_create_sale_wizard_form" model="ir.ui.view">
+            <field name="name">quotation.create.sale.wizard.form</field>
+            <field name="model">quotation.create.sale.wizard</field>
+            <field name="arch" type="xml">
+                <form string="采购报价" class="o_sale_order">
+                <sheet>
+                    <div class="oe_title">
+                        <h2>
+                            <separator string="开始报价"/>
+                        </h2>
+                    </div>
+                    <field name="quotation_create_sale_lines">
+                        <tree editable="bottom" create="0" delete="0">
+                            <field name="quotation_id" invisible="1" options="{'no_open': true, 'no_create': true}"/>
+                            <field name="request_quotation_line_id" invisible="1" options="{'no_open': true, 'no_create': true}"/>
+                            <field name="product_id" options="{'no_open': true, 'no_create': true}"/>
+                            <field name="default_code" />
+                            <field name="cat_no" />
+                            <field name="product_uom" />
+                            <field name="tax_id" />
+                            <field name="comment_desc_cn" />
+                            <field name="product_list_price_cny" />
+                            <field name="product_purchase_price_cny" />
+                            <field name="vendor_lead_time" />
+                            <field name="product_uom_qty" />
+                            <field name="price_unit" />
+                            <field name="external_comments" />
+                        </tree>
+                    </field>
+                </sheet>
+                <footer>
+                    <button string="报价" name="action_quotation_sale" type="object" />
+                    <button string="关闭" special="cancel" />
+                </footer>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>

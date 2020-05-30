@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="extra_product_category_form_view" model="ir.ui.view">
+            <field name="name">产品分类页面增加自定义页签</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="product.product_category_form_view"/>
+            <field name="arch" type="xml">
+                <div name="button_box" position="inside">
+                    <button name="sync_categ_update" type="object" string="同步分类信息" groups="extra_product.group_product_api_user"/>
+                    <button name="action_delete" type="object" string="删除分类" groups="extra_product.group_product_api_user"/>
+                </div>
+            </field>
+        </record>
+
+        <record id="extra_product_template_search_view" model="ir.ui.view">
+            <field name="name">产品搜索视图增加自定义页签</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_search_view"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="brand_id" />
+                    <field name="cat_no" />
+                    <field name="product_model" />
+                </field>
+            </field>
+        </record>
+
+        <record id="extra_product_template_tree_view" model="ir.ui.view">
+            <field name="name">产品页面增加自定义页签</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_tree_view"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="comment_desc_cn" />
+                    <field name="brand_id" />
+                    <field name="cat_no" />
+                    <field name="product_model" />
+                </field>
+
+                <field name="name" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+            </field>
+        </record>
+
+        <record id="extra_product_template_form_view" model="ir.ui.view">
+            <field name="name">产品页面增加自定义页签</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <header position="inside">
+                    <button name="sync_product_update" type="object" string="同步产品信息" groups="extra_product.group_product_api_user"/>
+                    <button name="sync_product_update_other_odoo" type="object" string="同步产品信息(子系统)" groups="extra_product.group_product_api_user"/>
+                    <button name="action_delete" type="object" string="下架产品" attrs="{'invisible': [('active', '=', False), ('on_website', '=', False)]}" groups="extra_product.group_product_api_user"/>
+                </header>
+                <page name="sales" position="after">
+                    <page string="网站信息" name="extra_info">
+                        <group name="属性">
+                            <group>
+                                <field name="cas_code" />
+                                <field name="brand_id" options="{'no_open': true, 'no_create': true}"/>
+                                <field name="package_name" />
+                                <field name="cat_no" />
+                                <field name="comment_desc_cn" />
+                                <field name="comment_desc_en" />
+                                <field name="product_model" />
+                                <field name="duty_rate" />
+                            </group>
+                            <group>
+                                <field name="storage_condition" />
+                                <field name="counting_weight" />
+                                <field name="net_weight" />
+                                <field name="is_discontinued" />
+                                <field name="product_manager_name" />
+                                <field name="is_stockitem" />
+                                <field name="min_orderqty" />
+                                <field name="product_status" />
+                                <field name="on_website" />
+                                <field name="product_tag" />
+                            </group>
+                        </group>
+                        <separator string="价格"/>
+                        <field name="pricelist_currency_ids">
+                            <tree editable="bottom">
+                                <field name="product_tmpl_id" invisible="1" options="{'no_open': true, 'no_create': true}"/>
+                                <field name="product_id" invisible="1" options="{'no_open': true, 'no_create': true}"/>
+                                <field name="currency_id" options="{'no_open': true, 'no_create': true}"/>
+                                <field name="price" />
+                            </tree>
+                        </field>
+
+                        <separator string="成本"/>
+                        <field name="costlist_currency_ids">
+                            <tree editable="bottom">
+                                <field name="product_tmpl_id" invisible="1" options="{'no_open': true, 'no_create': true}"/>
+                                <field name="product_id" invisible="1" options="{'no_open': true, 'no_create': true}"/>
+                                <field name="currency_id" options="{'no_open': true, 'no_create': true}"/>
+                                <field name="price" />
+                            </tree>
+                        </field>
+
+                    </page>
+                </page>
+            </field>
+        </record>
+
+        <record id="extra_product_supplierinfo_tree_view" model="ir.ui.view">
+            <field name="name">产品供应商树形页面增加字段</field>
+            <field name="model">product.supplierinfo</field>
+            <field name="inherit_id" ref="product.product_supplierinfo_tree_view"/>
+            <field name="arch" type="xml">
+                <field name="min_qty" position="after">
+                    <field name="vendor_term" />
+                    <field name="vendor_shipment" />
+                    <field name="currency_id" />
+                </field>
+
+
+                <field name="currency_id" position="before">
+                    <field name="for_price" />
+                </field>
+            </field>
+        </record>
+
+        <record id="product_batch_sync_view" model="ir.ui.view">
+            <field name="name">product.sync.batch.view</field>
+            <field name="model">product.sync.batch</field>
+            <field name="arch" type="xml">
+                <form string="批量同步产品">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="import_binary"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button string='同步' name="action_sync" type="object" class="btn-primary" />
+                        or
+                        <button string='同步(子系统)' name="action_sync" type="object" class="btn-primary" context="{'other_odoo': True}"/>
+                        or
+                        <button string="取消" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="extra_product_supplierinfo_form_view" model="ir.ui.view">
+            <field name="name">产品供应商表单页面增加字段</field>
+            <field name="model">product.supplierinfo</field>
+            <field name="inherit_id" ref="product.product_supplierinfo_form_view"/>
+            <field name="arch" type="xml">
+                <field name="product_code" position="after">
+                    <field name="vendor_term" />
+                    <field name="vendor_shipment" />
+                </field>
+
+                <field name="currency_id" position="attributes">
+                    <attribute name="options">{'no_create': True, 'no_open': True}</attribute>
+                </field>
+
+                <field name="price" position="after">
+                    <br />
+                    <label for="for_price" string="外币采购价"/>
+                    <field name="for_price" />
+                </field>
+            </field>
+        </record>
+
+        <record id="extra_product_pricelist_tree_view" model="ir.ui.view">
+            <field name="name">产品外币价格tree视图</field>
+            <field name="model">product.pricelist.currency</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="product_id" requierd="1"/>
+                    <field name="product_tmpl_id" invisible="1"/>
+                    <field name="currency_id" />
+                    <field name="price" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_extra_product_pricelist_tree_view" model="ir.actions.act_window">
+            <field name="name">产品外币价格tree视图</field>
+            <field name="res_model">product.pricelist.currency</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+            <field name="view_id" ref="extra_product_pricelist_tree_view" />
+            <field name="help"></field>
+        </record>
+
+        <record id="extra_product_costlist_tree_view" model="ir.ui.view">
+            <field name="name">产品外币成本tree视图</field>
+            <field name="model">product.costlist.currency</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="product_id" requierd="1"/>
+                    <field name="product_tmpl_id" invisible="1"/>
+                    <field name="currency_id" />
+                    <field name="price" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_extra_product_costlist_tree_view" model="ir.actions.act_window">
+            <field name="name">产品外币成本tree视图</field>
+            <field name="res_model">product.costlist.currency</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+            <field name="view_id" ref="extra_product_costlist_tree_view" />
+            <field name="help"></field>
+        </record>
+
+        <record id="extra_product_brand_form_view" model="ir.ui.view">
+            <field name="name">产品品牌form视图</field>
+            <field name="model">product.brand</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="sync_brand_update" type="object" string="同步品牌信息" groups="extra_product.group_product_api_user"/>
+                        <button name="action_delete" type="object" string="删除品牌" attrs="{'invisible': [('active', '=', False)]}" groups="extra_product.group_product_api_user"/>
+                    </header>
+                    <sheet>
+                        <group name="base_info">
+                            <field name="name" requierd="1"/>
+                            <field name="name_en" />
+                            <field name="guid" />
+                            <field name="active" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="extra_product_brand_tree_view" model="ir.ui.view">
+            <field name="name">产品品牌tree视图</field>
+            <field name="model">product.brand</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name" requierd="1"/>
+                    <field name="name_en" />
+                    <field name="guid" />
+                    <field name="active" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="extra_product_brand_search_view" model="ir.ui.view">
+            <field name="name">产品品牌search视图</field>
+            <field name="model">product.brand</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="name_en" />
+                    <field name="guid" />
+                </search>
+            </field>
+        </record>
+
+        <record id="action_extra_brand_tree_view" model="ir.actions.act_window">
+            <field name="name">产品品牌</field>
+            <field name="res_model">product.brand</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+            <field name="view_id" ref="extra_product_brand_tree_view" />
+            <field name="help"></field>
+        </record>
+
+        <record id="action_product_batch_sync_view" model="ir.actions.act_window">
+            <field name="name">批量同步产品</field>
+            <field name="res_model">product.sync.batch</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="context">{}</field>
+            <field name="target">new</field>
+            <field name="help"></field>
+        </record>
+
+        <menuitem name="产品品牌" action="action_extra_brand_tree_view" id="menu_action_extra_brand_tree_view" parent="sales_team.menu_sales" sequence="40"/>
+
+        <menuitem name="批量同步产品" action="action_product_batch_sync_view" id="menu_product_batch_sync_view" parent="sales_team.menu_sales" 
+            groups="extra_product.group_product_api_user" sequence="40"/>
+
+        <menuitem name="产品外币价格" action="action_extra_product_pricelist_tree_view" id="menu_action_extra_product_pricelist_tree_view" parent="sales_team.menu_sales" sequence="50"/>
+
+        <menuitem name="产品外币成本" action="action_extra_product_costlist_tree_view" id="menu_action_extra_product_costlist_tree_view" parent="purchase.menu_procurement_management" sequence="60"/>
+
+    </data>
+</odoo>

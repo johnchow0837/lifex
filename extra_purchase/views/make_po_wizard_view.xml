@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_procurement_make_po_wizard_form" model="ir.ui.view">
+            <field name="name">procurement.make.po.wizard.form</field>
+            <field name="model">procurement.make.po.wizard</field>
+            <field name="arch" type="xml">
+                <form string="创建采购单" class="o_sale_order">
+                <sheet>
+                    <div class="oe_title">
+                        <h2>
+                            <separator string="开始创建"/>
+                        </h2>
+                    </div>
+                    <group>
+                        <field name="date_planned" />
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="创建" name="action_make_po" type="object" />
+                    <button string="关闭" special="cancel" />
+                </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_procurement_cancel_wizard_form" model="ir.ui.view">
+            <field name="name">procurement.cancel.wizard.form</field>
+            <field name="model">procurement.cancel.wizard</field>
+            <field name="arch" type="xml">
+                <form string="取消需求" class="o_sale_order">
+                <sheet>
+                    <div class="oe_title">
+                        <h2>
+                            <separator string="确认取消勾选需求？(直发需求只能通过取消销售单取消)"/>
+                        </h2>
+                    </div>
+                </sheet>
+                <footer>
+                    <button string="确认" name="action_cancel" type="object" />
+                    <button string="关闭" special="cancel" />
+                </footer>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="view_procurement_split_wizard_form" model="ir.ui.view">
+            <field name="name">procurement.split.wizard.form</field>
+            <field name="model">procurement.split.wizard</field>
+            <field name="arch" type="xml">
+                <form string=" 拆分需求" class="o_sale_order">
+                <sheet>
+                    <div class="oe_title">
+                        <group>
+                            <field name="procurement_id" />
+                            <field name="procurement_qty" />
+                            <field name="split_qty" />
+                        </group>
+                    </div>
+                </sheet>
+                <footer>
+                    <button string="拆分" name="action_split" type="object" />
+                    <button string="关闭" special="cancel" />
+                </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_action_dtot_transfer_wizard_form" model="ir.ui.view">
+            <field name="name">procurement.dtot.wizard.form</field>
+            <field name="model">procurement.dtot.wizard</field>
+            <field name="arch" type="xml">
+                <form string="直发转非直发" class="o_sale_order">
+                <sheet>
+                    <div>
+                        <span><field name="tips" /></span>
+                    </div>
+                    <group>
+                        <field name="warehouse_id" options="{'no_open': True, 'no_create': True}"/>
+                    </group>
+
+                </sheet>
+                <footer>
+                    <button string="确认" name="action_dtot_transfer" type="object" />
+                    <button string="关闭" special="cancel" />
+                </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_action_ttod_transfer_wizard_form" model="ir.ui.view">
+            <field name="name">procurement.ttod.wizard.form</field>
+            <field name="model">procurement.ttod.wizard</field>
+            <field name="arch" type="xml">
+                <form string="非直发转直发" class="o_sale_order">
+                <sheet>
+                    <div>
+                        <span><field name="tips" /></span>
+                    </div>
+
+                </sheet>
+                <footer>
+                    <button string="确认" name="action_ttod_transfer" type="object" />
+                    <button string="关闭" special="cancel" />
+                </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_sale_order_line_modify_qty_form" model="ir.ui.view">
+            <field name="name">sale.order.line.modify.qty.form</field>
+            <field name="model">sale.order.line.modify.qty</field>
+            <field name="arch" type="xml">
+                <form string="修改数量" class="o_sale_order">
+                <sheet>
+                    <group>
+                        <field name="sale_line_id" />
+                        <field name="qty" />
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="确认" name="action_modify_qty" type="object" />
+                    <button string="关闭" special="cancel" />
+                </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_stock_quant_modify_wizard_form" model="ir.ui.view">
+            <field name="name">stock.quant.modify.wizard.form</field>
+            <field name="model">stock.quant.modify.wizard</field>
+            <field name="arch" type="xml">
+                <form string="分配库存" class="o_sale_order">
+                <sheet>
+                    <group>
+                        <field name="order_for" />
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="确认" name="action_modify_order_for" type="object" />
+                    <button string="关闭" special="cancel" />
+                </footer>
+                </form>
+            </field>
+        </record>
+
+        <act_window
+            id="action_stock_quant_modify_wizard"
+            name="分配库存"
+            groups="extra_purchase.group_purchase_manager"
+            res_model="stock.quant.modify.wizard"
+            src_model="stock.quant"
+            multi="True"
+            target="new"
+            key2="client_action_multi"
+            view_mode="form"/>
+
+    </data>
+</odoo>

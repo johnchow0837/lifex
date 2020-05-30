@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="sale_stock.report_saleorder_document_inherit_sale_stock" inherit_id="sale.report_saleorder_document">
+        </template>
+
+        <template id="sale.report_saleorder_document">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="doc" t-value="doc.with_context({'lang':doc.partner_id.lang})"/>
+                <div class="header">
+                    <table width="100%" border="0" font-color="grey">
+                        <tr>
+                            <td width="30%" class="text-left"><b><font color="grey">望跃打印合同</font></b></td>
+                            <td width="30%" class="text-center"><b><font color="grey">合同编号：<t t-esc="o.contract_num or o.name"/></font></b></td>
+                            <td width="30%" class="text-right"><b><font color="grey"><ul class="list-inline">
+                                                                                        <li>第</li>
+                                                                                        <li><span class="page"/></li>
+                                                                                        <li>页</li>,
+                                                                                        <li>共</li>
+                                                                                        <li><span class="topage"/></li>
+                                                                                        <li>页</li>
+                                                                                        </ul></font></b></td>
+                        </tr>
+                    </table>
+                    <hr style="line-height:1px;height:1px;border-bottom:3px solid grey;margin:1px;"/>
+                </div>
+                <div class="page">
+                   <head>
+            <meta HTTP-EQUIV="Content-Type" Content="text-html; charset=UTF-8"/>
+            <title>打印合同</title>
+            <style type="text/css">
+            body{ font-family: arial; 
+            }
+            td { font-family: arial;
+            }
+            .noborder {height: 19px; font-size: 9pt; background-color: #FFFFFF; width:150px;
+                border-left: #FFFFFF 1px solid; border-right: #FFFFFF 1px solid;
+                border-top: #FFFFFF 1px solid; border-bottom: #000000 1px solid;
+            }
+            .noborder1 {height: 19px; font-size: 9pt; background-color: #FFFFFF; width:50px;
+                border-left: #FFFFFF 1px solid; border-right: #FFFFFF 1px solid;
+                border-top: #FFFFFF 1px solid; border-bottom: #000000 1px solid;
+            }
+            .noborder2 {height: 19px; font-size: 9pt; background-color: #FFFFFF; width:100px;
+                border-left: #FFFFFF 1px solid; border-right: #FFFFFF 1px solid;
+                border-top: #FFFFFF 1px solid; border-bottom: #000000 1px solid;
+            }
+            .faxnumber {height: 19px; font-size: 9pt; background-color: #FFFFFF; width:100px;
+                border-left: #FFFFFF 1px solid; border-right: #FFFFFF 1px solid;
+                border-top: #FFFFFF 1px solid; border-bottom: #FFFFFF 1px solid; font-weight=bold;
+            }
+
+                
+            td {
+                font-size: 13px; font-family: arial;
+            }
+            </style>
+            </head>
+            <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+            <center>
+            <table width="100%" border="0" cellspacing="0" bgcolor="#ffffff">
+              <tr>
+                <td width="5%" height="100" valign="top" />
+                  <td width="50%" height="100" valign="top">
+                <img t-if="o.company_id.logo" t-att-src="'data:image/png;base64,%s' % o.company_id.logo" style="height:100px;width:auto;leftmargin:10px" border="0"/>
+                </td>
+                <td align="right" valign="top">
+                <font face="arial">
+                <b>
+                合同号码: <t t-esc="o.contract_num or o.name"/><br/>
+                签订日期: <t t-esc="o.confirmation_date and o.confirmation_date.split(' ')[0] or ''"/><br/>
+                签约地点: 上海市浦东新区
+                </b>
+                </font>
+                </td>
+                <td rowspan="2" style="text-align:right;">  
+                <!-- <img src="admin/view/image/order/weixin.jpg" border="0" width='110'/><br/><span>扫一扫关注官方微信</span> -->
+                </td>
+              </tr>
+                <tr>
+            <td colspan="3" style="text-align:center;height:50px;vertical-align:bottom;padding-left:5px;font-size:20px;"><b>销售合同</b></td>
+            </tr>
+            </table>
+          </center>
+            <br/>
+            <table width="100%" border="1" cellspacing="0" cellpadding="1" bgcolor="#000000" class="pt">
+              <tr bgcolor="#ffffff" height="22">
+                <td width="50%" style="border:1px solid #000"><b>甲方：<t t-esc="o.partner_id.name"/></b></td>
+                <td width="50%" style="border:1px solid #000"><b>乙方：上海望跃科技有限公司</b></td>
+              </tr>
+              <tr bgcolor="#ffffff" height="22">
+                <td style="border:1px solid #000"><b>采购人员：<t t-esc="o.partner_contact_id.name or o.partner_invoice_id.name"/></b></td>
+                <td style="border:1px solid #000"><b>销售人员：<t t-esc="o.user_id.name"/></b></td>
+              </tr>
+              <tr bgcolor="#ffffff" height="22">
+                <td style="border:1px solid #000"><b>                
+                    联系方式：<t t-esc="o.partner_contact_id.mobile or o.partner_invoice_id.mobile"/>
+                   <!-- <br/> -->
+                    <!-- 传真：<t t-esc="o.partner_id.fax" /> -->
+                    </b></td>
+                     <td style="border:1px solid #000"><b>联系方式：<t t-esc="o.user_id.mobile or o.user_id.phone"/> 
+                     <!-- <br/> -->
+                     <!-- 传真：<t t-esc="o.user_id.fax" /> -->
+                </b></td>
+              </tr> 
+              <tr bgcolor="#ffffff" height="22">
+                <td style="border:1px solid #000"><b>电子邮箱：<t t-esc="o.partner_contact_id.email or o.partner_invoice_id.email"/> </b></td>
+                <td style="border:1px solid #000"><b>电子邮箱：<t t-esc="o.user_id.email"/> </b></td>
+              </tr>
+              <tr bgcolor="#ffffff" height="22">
+                <td style="border:1px solid #000"><b>联系地址：<t t-esc="o.partner_contact_id.street2 or o.partner_invoice_id.street2"/></b></td>
+                <td style="border:1px solid #000"><b>联系地址: 中国·上海浦东新区蔡伦路85弄95号九洲中心109-113室</b></td>
+              </tr>
+              <tr bgcolor="#ffffff" height="22">
+                 <td align="left" style="border:1px solid #000">
+                    <b>合同生效：合同的生效条款详见下文“合同有效性”条款
+                    <br/>
+                    交货日期：详见下产品货期
+                    </b>
+                 </td>
+                <td style="border:1px solid #000"><b>开户银行：上海银行张江支行<br/>收款账号：03003630381
+                    <br/>
+                    服务热线: 4009-20-3909
+                    </b></td>
+              </tr>
+              <tr bgcolor="#ffffff" height="22">
+                <td align="left" style="border:1px solid #000"><b>付款条款：<t t-esc="o.payment_term_id.name"/>
+                
+                <br/>提示：银行汇款凭证不做到款凭证，请您按照合同条款及时付款！</b></td>
+                <td align="left" style="border:1px solid #000"><b/></td>
+              </tr>
+            </table>
+            <br/>
+            <table width="100%" border="0" cellspacing="0" bgcolor="#ffffff">
+              <tr>
+                <td>
+                <ul style="margin-top:1px;margin-left:20px;"><li><font face="arial">本合同下甲方为需方，乙方为供方。双方经口头协商同意达成一致后签署本合同，各方在此承诺已完全知悉并理解经双方协商确认的本合同的所有条款的含义。</font></li>
+                </ul>
+                  </td>
+                  </tr>
+                  <tr>
+                  <td>
+                    <ul style="margin-top:1px;margin-left:20px;"><li><font face="arial">合同有效性：合同总额在人民币20,000.00元以下，双方授权代表签字等同于单位盖章，双方授权代表签字之日即生效；除此之外，合同自双方授权代表签字并加盖公章之日起生效；签字人同时连带承担关于合同执行过程的所有责任。</font></li>
+                        </ul>
+                  </td>
+                  </tr>
+                  </table>
+            <table width="100%" border="0" cellspacing="0" bgcolor="#ffffff">
+              <tr>
+                <td valign="top">
+                <br/>
+                一、 产品名称、品牌、型号、数量、金额及供货时间<font/>
+                <br/>
+                </td>
+              </tr>
+            </table>
+            <table bgcolor="#ffffff" cellspacing="0" cellpadding="0" style="width:100%;border:0px;font-size:8px;">
+              <tr bgcolor="#ffffff">
+                <td style="width:3.125%; border:1px solid #000;text-align:center;vertical-align:middle">序号</td>
+                <td style="width:7.8125%; border:1px solid #000;text-align:center;vertical-align:middle">SKU</td>
+                <td style="width:37.5%; border:1px solid #000;text-align:center;vertical-align:middle">产品中文描述</td>
+                <td style="width:7.8125%; border:1px solid #000;text-align:center;vertical-align:middle">品牌</td>
+                <td style="width:7.8125%; border:1px solid #000;text-align:center;vertical-align:middle">原厂货号</td>
+                <td style="width:7.8125%; border:1px solid #000;text-align:center;vertical-align:middle">货期</td>
+                <td style="width:4.6875%; border:1px solid #000;text-align:center;vertical-align:middle">包装单位</td>
+                <td style="width:7.8125%; border:1px solid #000;text-align:center;vertical-align:middle">数量</td>
+                <td style="width:7.8125%; border:1px solid #000;text-align:center;vertical-align:middle">含税单价(CNY)</td>
+                <td style="width:7.8125%; border:1px solid #000;text-align:center;vertical-align:middle">未税总价(CNY)</td>
+                <td style="width:7.8125%; border:1px solid #000;text-align:center;vertical-align:middle">含税总价(CNY)</td>
+                <!-- <td style="width:50px; border-bottom:3px double #000;text-align:center;">物料编码</td> -->
+              </tr>
+              
+              <t t-foreach="o.order_line" t-as="line">
+              <tr height="22">
+                <td style="width:3.125%; border:1px solid #000;text-align:center;vertical-align:middle"><t t-esc="line_index + 1"/></td>
+                <td style="width:7.8125%; border:1px solid #000;text-align:center;vertical-align:middle"><t t-esc="line.product_id.default_code"/></td>
+                <td style="width:37.5%; border:1px solid #000;text-align:center;vertical-align:middle"><t t-esc="line.product_id.comment_desc_cn"/></td>
+                <td style="width:7.8125%; border:1px solid #000;text-align:center;vertical-align:middle"><t t-esc="line.product_id.brand_id.name"/></td>
+                <td style="width:7.8125%; border:1px solid #000;text-align:center;vertical-align:middle"><t t-esc="line.product_id.cat_no"/></td>
+                <td style="width:7.8125%; border:1px solid #000;text-align:center;vertical-align:middle"><t t-esc="str(int(line.customer_lead)) + '天'"/></td>
+                <td style="width:4.6875%; border:1px solid #000;text-align:center;vertical-align:middle"><t t-esc="line.product_uom.name"/></td>
+                <td style="width:7.8125%; border:1px solid #000;text-align:center;vertical-align:middle"><t t-esc="line.product_uom_qty"/></td>
+                <td style="width:7.8125%; border:1px solid #000;text-align:center;vertical-align:middle"><span t-field="line.price_unit"/></td>
+                <td style="width:7.8125%; border:1px solid #000;text-align:center;vertical-align:middle"><span t-field="line.price_subtotal"/></td>
+
+                <td style="width:7.8125%; border:1px solid #000;text-align:center;vertical-align:middle"><span t-field="line.price_total"/></td>
+<!--                 <td style="width:50px; border-bottom:1px solid #000;text-align:center;"><t t-esc="line.product_id.cat_no" /></td> -->
+              </tr>
+              </t>  
+<!--                 <tr height="22">
+                    <td colspan='10'><b>收货地址：<t t-esc="o.partner_shipping_id.street" /></b></td>
+                </tr> -->
+                <tr height="22">
+                    <td colspan="6"><b>运费(CNY)：已含</b></td>
+                    <td colspan="2"/>
+                    <td colspan="2" align="left"><b/></td>
+                </tr>
+                <tr height="22">
+                    <td colspan="3" align="left"><b>合计订单金额(人民币)：</b></td>
+                    <td colspan="2" align="left"><b><span t-field="o.amount_total"/></b></td>
+                    <td colspan="5" align="left"><b/></td>
+                </tr>
+
+            <!--    <t t-esc="待彬谷确认" >
+                <tr height="22">
+                    <td colspan = '8' align="left"><b>会员优惠(CNY)：</b></td>
+                    <td colspan = '2' align="left"><b><?php echo (float)$MEMBERSHIP_DISCOUNT>0 ? '-'.number_format($MEMBERSHIP_DISCOUNT,2,'.', '') : '0.00';?></b></td>
+                </tr>
+
+
+                <?php if(!empty($COUPON_AMOUNT)&&(float)$COUPON_AMOUNT>0){?>
+                <tr height="22">
+                    <td colspan = '8' align="left"><b>优惠券(CNY)：</b></td>
+                    <td colspan = '2' align="left"><b><?php echo (float)$COUPON_AMOUNT>0 ? '-'.number_format($COUPON_AMOUNT,2,'.', '') : '0.00';?></b></td>
+                </tr>
+                <?php }?>
+
+            </t> -->
+                
+                
+<!--                 <tr height="22">
+                    <td colspan = '8' align="left"><b>订单总价(CNY)：</b></td>
+                    <td colspan = '2' align="left"><b><t t-esc="o.amount_total" /></b></td>
+                </tr> -->
+            </table>
+            <table width="100%" border="0" cellspacing="0" bgcolor="#ffffff">
+              <tr>
+                <td>    （说明：本合同金额不包括现场服务费及安装费用，合同中明确包含“现场服务费”除外。）
+                    </td>
+                </tr>
+            </table>
+            <br/>
+            <table width="100%" border="0" cellspacing="0" bgcolor="#ffffff">
+              <tr>
+                <td valign="top">
+                <br/>
+                二、开票资料信息（请阁下仔细核对此信息）
+                <br/>
+                </td>
+              </tr>
+            </table>
+
+            <table width="100%" border="1" cellspacing="0" cellpadding="0" class="pt" style="">
+                <tr height="22"><td align="left" width="50%"><b>公司注册名：<t t-esc="o.partner_id.name"/></b></td>
+                    <td align="left"><b>发票类型：<t t-set="type_dict" t-value="{'common_vat': '普票', 'vat': '增票'}"/><t t-esc="type_dict.get(o.partner_id.customer_invoice_type, '')"/></b></td>
+                </tr>
+                <tr height="22">
+                    <td align="left"><b>纳税人识别号: <t t-esc="o.partner_id.customer_taxpayer_number"/></b></td>
+                    <td align="left"><b>（必填项；若为15位，一旦更正为18位，请及时反馈至我司）</b></td></tr>
+                <tr height="22">
+                    <td align="left"><b>注册电话：<t t-esc="o.partner_id.customer_invoice_phone"/></b></td>
+                    <td align="left"><b>注册地址：<t t-esc="o.partner_id.customer_invoice_address"/></b></td>
+                </tr>
+                <tr height="22">
+                    <td align="left"><b>开户银行：<t t-esc="o.partner_id.customer_invoice_bank"/></b></td>
+                    <td align="left"><b>银行账号：<t t-esc="o.partner_id.customer_invoice_account"/></b></td>
+                </tr>
+                </table>
+            <br/>
+
+            <table width="100%" border="0" cellspacing="0" bgcolor="#ffffff">
+              <tr>
+                <td>
+            <font face="arial"/>
+            三、发票及货物接收信息 <br/>
+            <table width="100%" border="1" cellspacing="0" cellpadding="0" bgcolor="#000000" class="pt">
+              <tr bgcolor="#ffffff" height="22">
+                <td width="50%"><b>发票接收：<t t-esc="o.partner_invoice_id.company_title_name"/></b></td>
+                <td width="50%"><b>货物接收：<t t-esc="o.partner_shipping_id.company_title_name"/></b></td>
+              </tr>
+              <tr bgcolor="#ffffff" height="22">
+                <td><b>接收人：<t t-esc="o.receipt_address_info_name"/>
+                                       <!-- 手机：<t t-esc="o.partner_invoice_id.mobile" /> -->
+                       </b></td>
+                <td><b>接收人：<t t-esc="o.address_info_name"/>
+                                   <!-- 手机：<t t-esc="o.partner_shipping_id.mobile" /> -->
+                       </b></td>
+              </tr>
+
+              <tr bgcolor="#ffffff" height="22">
+                <td><b>电话：<t t-esc="o.receipt_address_info_mobile or o.receipt_address_info_telephone"/>
+                                       <!-- 手机：<t t-esc="o.partner_invoice_id.mobile" /> -->
+                       </b></td>
+                <td><b>电话：<t t-esc="o.address_info_mobile or o.address_info_telephone"/>
+                                   <!-- 手机：<t t-esc="o.partner_shipping_id.mobile" /> -->
+                       </b></td>
+              </tr>
+
+              <tr bgcolor="#ffffff" height="22">
+                <td><b>地址：<t t-esc="o.receipt_address_info_address"/></b></td>
+                <td><b>地址：<t t-esc="o.address_info_address"/></b></td>
+              </tr>
+            </table>
+            <br/><br/>
+            四、质量要求、技术标准、乙方对质量负责的条件和期限<br/>
+            4.1产品的技术标准（包含质量要求），按双方约定的产品的技术标准（包含质量要求）如下：_________________________如未有特别约定，则按照乙方企业标准执行。
+            <br/>
+            4.2乙方对质量负责的期限和条件：质量保证期限（质保期）___年。
+            <br/>
+            4.3 如质保期内合同产品出现非人为因素所造成的产品质量故障，乙方提供免费维修；如质保期内若产品出现非质量因素所造成的产品损坏或质保期后若产品发生损坏，在可修复的前提下，乙方提供有偿维修。
+            <br/><br/>
+            五、产品验收
+            <br/>
+            5.1产品到达甲方指定的送货地点后，甲方合同签订人或指定产品接收人需对物流公司配送的产品当场开箱并进行验收，产品验收范围包括：现场接收的产品与合同内的订货产品性能是否相符、产品外观是否破损或有瑕疵、产品数量及配件数量是否缺失等。其中，无论甲方合同签订人或指定接收人在现场接收了产品并在送货单内签字（如不是合同签订人或产品指定接收人，但属于产品接收公司的员工或关联工作公司员工在快递单上对合同产品进行了签收，乙方同样视为甲方已对所配送的产品验收合格且被甲方接受），乙方即视为甲方对所配送的产品验收合格且被甲方接受，乙方将不再承担除产品质量问题以外的任何问题。如合同约定乙方安装人员需上门为对产品进行安装调试，则验收时间为安装调试完毕当天，如甲方当场不做验收，视为验收通过。望跃提醒阁下：产品接收人务必在签收送货单前当场检查物流公司所配送的产品是否存在产品故障，以减少由于未做充分检查而造成的产品损失。
+            <br/>
+            5.2双方约定的验收时间、验收地址___________________________________________________________________。
+            <br/>
+            5.3验收标准为本合同第四条第1款以及其他相关约定。
+            <br/>
+            5.4参加验收人为甲乙双方代表。
+            <br/>
+            六、售后退换货
+            <br/>
+            6.1甲方单方面原因导致的选型、购买数量等错误，造成的退换货要求，将不被接受。
+            <br/>
+            6.2甲方拒绝接收货物或无正当理由退货，应按合同总金额的30%向乙方支付违约金。如属甲方特别定制产品，则甲方拒绝接收货物或无正当理由退货，应按合同总金额的100%向乙方支付违约金。
+            <br/>
+            6.3关于换货：合同产品属于订制类产品、易耗品、一次性卫生用品、产品技术性能决定无法更换的产品不属于可更换范围内。
+            <br/><br/>
+            七、撤销合同
+            <br/>
+            7.1甲乙双方应本着合约精神及诚信原则，严格遵守并履行合同，同时应尽最大努力避免违约情形出现。合同生效后，如遇厂家不能供货（包括停产）及海关、商检等第三方不可抗因素造成的不可供货之外的情况无法执行合约，则乙方需向甲方支付一定的毁约赔偿金，赔偿金额为毁约产品金额的30%比例，且不包含其他损失；甲方出现单方面撤销合同的行为，则甲方需向乙方支付一定的毁约赔偿金，赔偿金额为毁约产品金额的30%比例，且不包含其他损失。
+            <br/>
+            7.2根据双方协约，要求甲方合同公司名称，开具发票公司名称以及打款公司名称需要保持三方一致，如果合同公司和开发票公司不一致的情况，需要提供双方有效的关联证明，如不能提供的，乙方有权终止合同。
+            <br/><br/>
+            八、包装标准、包装物的供应与回收
+            <br/>
+            <!-- 8.1包装标准为：□普通适合运输 □特殊约定如下：________。 -->
+<!--             <br/>
+            8.2双方约定包装物的供应如下：□甲方提供  □乙方提供。
+            <br/>
+            8.3甲方提供包装物时，包装物是否回收：□回收  □不回收。 -->
+            包装标准为：□普通适合运输 □特殊约定如下：________。
+            <br/><br/>
+            Ⅸ. 撤销合同<br/>
+            1、甲乙双方应本着合约精神及诚信原则，严格遵守并履行合同，同时应尽最大努力避免违约情形出现。合同生效后，如遇厂家不能供货（包括停产）及海关、商检等第三方不可抗因素造成的不可供货之外的情况无法执行合约，则乙方需向甲方支付一定的毁约赔偿金，赔偿金额为毁约产品金额的20%比例，且不相关其他损失；甲方出现单方面撤销合同的行为，则甲方需向乙方支付一定的毁约赔偿金，赔偿金额为毁约产品金额的20%比例，且不相关其他损失。 
+            2、根据双方协约，要求甲方合同公司名称，开具发票公司名称以及打款公司名称需要保持三方一致，如果合同公司和开发票公司不一致的情况，需要提供双方有效的关联证明，如不能提供的，乙方有权终止合同。
+            <br/><br/>
+            九、违约责任
+            <br/>
+            9.1甲方逾期付款，每迟延一天，应向乙方支付违约金为合同总额的万分之五；同时，乙方供货期限顺延。
+            <br/>
+            9.2乙方应严格按照合同交货期交货。由于特殊原因需变更合同货品的交货期,变更方需提交货品交货期变更的书面说明，并交付合同另一方，在得到合同双方书面确认并明确新的交货期后，此变更成立。如果乙方遭遇不可抗拒的理由（如地震、战争、台风、游行等不可抗力）或物流第三方公司配送过程中将产品遗失（物流公司出具证明并提供给客户）则不属于迟交范畴。如遇厂家不能供货（包括停产）及海关、商检等第三方不可抗因素造成的不可供货，合同将自动失效，且乙方有责任及时通知甲方并全额退还甲方已支付的本合同款项，但乙方无需承担其他责任。非特殊原因的货期延误，在合同约定到货期仍没有到货的情况下，乙方逾期供货，每延迟一天，应向甲方支付违约金为延期供货部分合同金额的万分之五，涉及延期供货部分的赔偿总金额不超过延期供货部分总额的百分之一。
+            <br/>
+            9.3甲方应在乙方交货时接收货物，甲方逾期接收货物的，乙方不负保管义务，相应的保管费用及货物灭失的风险均由甲方承担。每逾期一天，甲方应按合同总金额的万分之五向乙方支付违约金。甲方逾期七天不接收货物（即可视为甲方拒绝接收货物），乙方可解除合同，因此给乙方造成损失的，甲方还应赔偿损失。
+            <br/><br/>
+            十、特殊约定
+            <br/>
+            甲方理解并同意在未持有乙方出具的有效授权委托书（加盖乙方公章并有乙方法定代表人签字或签章）或者双方之间按照本合同的规定的生效条件已经存在生效的书面合同，乙方任何业务经办人员无论以口头形式或书面形式作出的任何业务承诺、任何行为（包括但不限于未经乙方授权以乙方名义、以乙方业务员名义发出业务订单，接收、验收或确认任何工作成果），都不能代表乙方，该种行为完全是其个人行为，甲方同意由此发生的所有法律后果都由其个人承担，无权向乙方主张任何权利。如因此给乙方造成损失的，甲方应负责赔偿。对甲方不按此条约定执行的行为，乙方有权要求甲方支付违约行为涉及金额百分之三十的违约金。
+            <br/><br/>
+            <!-- 十一、廉政条款
+            <br/>
+            11.1甲方同意甲方及其关联公司的股东、管理人员以及普通员工不得为业务、结算等事项对乙方以及乙方员工及其亲属请客、送礼或暗中给予回扣、佣金、有价证券、实物或其它形式的好处，否则不论数额大小，甲方应承担五十万元或者甲方与彬谷公司已发生全部业务额的30％（以违约金数额较高的为准）的违约金。甲方并有权解除协议。
+            <br/>
+            甲方同意并承诺本公司及关联公司不存在乙方及乙方员工参股或甲方及乙方员工以他人名义参股的情形，且保证上述公司的股东、管理人员与乙方或乙方的高级管理人员及其他员工没有亲属关系或其他特殊关系，甲方同意本单位和甲方关联公司不以任何形式雇用乙方以及乙方员工（在职或离职）及其亲属为甲方或甲方的关联公司工作，否则甲方应承担五十万元或者甲方与彬谷公司已发生全部业务额的30％（以违约金数额较高的为准）的违约金。乙方并有权解除协议。
+            <br/>
+            上述条款对双方具有永久约束力，不因协议履行情况而失效。如果甲方主动或者在乙方提出的情况下向乙方提供实际发生的全部违约事实以及相关证据材料,则乙方可视甲方配合程度减轻或直至免除追究甲方以上违约责任。
+            <br/>
+            11.2若甲方发现乙方人员有任何涉及舞弊的不正当行为，如索贿受贿、利益冲突等，甲方应通过乙方的邮箱进行举报。乙方可对举报属实和严格遵守诚信廉洁条款的甲方，在同等条件下优先考虑与甲方继续合作。
+            <br/><br/> -->
+            十一、纠纷解决方式
+            <br/>
+            如因双方之间签订的合同、协议，或履行签订的合同、协议，或发生的其他业务出现的争议，或发生的其他财产权益纠纷，双方应协商解决；协商不成时，双方同意提交合同签订地有管辖权的人民法院诉讼解决。
+            <br/><br/>
+            十二、本合同一式 贰 份，甲方执 壹 份，乙方执 壹 份，经双方盖章后生效，有效期限为  壹  年。本合同附件为本合同的组成部分，除非双方另有明确约定，附件内容与主合同相矛盾时应以主合同为准。
+            </td>
+            </tr>
+            </table>
+            <br/><br/>
+            <table width="100%" border="1" cellspacing="0" cellpadding="0" bgcolor="#000000" class="pt">
+              <tr bgcolor="#ffffff">
+                <td width="50%" valign="top"><b>甲方（需方）</b></td>
+                <td width="50%" valign="top"><b>乙方（供方）</b></td>
+              </tr>
+              <tr bgcolor="#ffffff" height="150">
+                <td valign="top">
+                    <b>单位名称（章）：<t t-esc="o.partner_id.name"/></b>
+                    <br/>
+                    <b>委托代理人：</b>
+                    <br/>
+                    <b>日期：</b>
+                </td>
+                <td valign="top" background="admin/view/image/order/ehsysign.gif">
+                    <b>单位名称（章）: </b>上海望跃科技有限公司
+                    <br/>
+                    <b>委托代理人：</b>
+                    <br/>
+                    <b>日期：</b>
+                </td>
+              </tr>
+            </table>
+            <br/><br/><br/>
+            
+            </body>
+            </div>
+            <div class="footer">
+                <hr style="line-height:1px;height:1px;border-bottom:3px solid grey;margin:1px;"/>
+                <b><font color="grey">本合同及其附件（如果有的话）除填写必需的合同签约主体、签约人、签约时间或已有的空格外，任何涂改、删除、增添均无效。</font></b>
+            </div>
+            </t>
+        </template>
+
+    
+
+    </data>
+</odoo>

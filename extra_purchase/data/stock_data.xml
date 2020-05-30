@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="seq_picking_type_cutsomer_transit_in" model="ir.sequence">
+            <field name="name">直发收货序列</field>
+            <field name="prefix">MCIN</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+            <field name="use_date_range" eval="True" />
+        </record>
+
+
+        <record id="picking_type_customer_transit_in" model="stock.picking.type">
+            <field name="name">直发收货类型</field>
+            <field name="sequence_id" ref="seq_picking_type_cutsomer_transit_in"/>
+            <field name="code">incoming</field>
+            <field name="warehouse_id" eval="False"/>
+            <field name="default_location_src_id" ref="stock.stock_location_suppliers"/>
+            <field name="default_location_dest_id" ref="extra_sale.stock_customer_transit_locations"/>
+        </record>
+
+        <record id="stock_customer_rule" model="procurement.rule">
+            <field name="name">供应商--> 直发</field>
+            <field name="action">buy</field>
+            <field name="location_id" ref="extra_sale.stock_customer_transit_locations"/>
+            <field name="route_id" ref="extra_sale.stock_customer_transit_route"/>
+            <field name="picking_type_id" ref="picking_type_customer_transit_in"/>
+            <field name="group_propagation_option">none</field>
+            <field name="propagate" eval="False" />
+            <field name="auto_run" eval="False" />
+        </record>
+
+        <record id="compute_purchase_procurements" model="ir.cron">
+            <field name="name">计算非直发需求</field>
+            <field name="res_model">ir.cron</field>
+            <field name="active">True</field>
+            <field name="user_id">1</field>
+            <field name="interval_number">20</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field name="nextcall" eval="DateTime.now().strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="model">procurement.order</field>
+            <field name="function">compute_purchase_procurements</field>
+            <field name="args">()</field>
+        </record>
+
+    </data>
+</odoo>

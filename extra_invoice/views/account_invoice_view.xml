@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="extra_account_invoice_form" model="ir.ui.view">
+            <field name="name">采购发票增加字段</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="arch" type="xml">
+            	<field name="date_due" position="after">
+                    <field name="invoice_num" attrs="{'invisible': [('type', '!=', 'in_invoice')], 'required': [('type', '=', 'in_invoice')]}"/>
+                    <field name="invoice_code" attrs="{'invisible': [('type', '!=', 'in_invoice')]}"/>
+                </field>
+                <field name="partner_id" position="attributes">
+                    <attribute name="options">{'no_open': True, 'no_create': True}</attribute>
+                </field>
+                <xpath expr="//field[@name='invoice_line_ids']/tree" position="attributes">
+                    <attribute name="create">0</attribute>
+                </xpath>
+                <xpath expr="//field[@name='tax_line_ids']/tree" position="attributes">
+                    <attribute name="create">0</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="extra_account_invoice_tree" model="ir.ui.view">
+            <field name="name">采购发票增加字段</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_supplier_tree"/>
+            <field name="arch" type="xml">
+                <field name="number" position="after">
+                    <field name="invoice_num" attrs="{'invisible': [('type', '!=', 'in_invoice')], 'required': [('type', '=', 'in_invoice')]}"/>
+                    <field name="invoice_code" attrs="{'invisible': [('type', '!=', 'in_invoice')]}"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="extra_account_customer_invoice_form" model="ir.ui.view">
+            <field name="name">销售发票form视图修改</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='other_info']/group/group/field[@name='name']" position="attributes">
+                    <attribute name="string">发票号</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="partner_phone" />
+                    <field name="partner_address" />
+                </xpath>
+
+<!--                 <xpath expr="//field[@name='partner_shipping_id']" position="after">
+                    <field name="partner_shipping_phone" />
+                    <field name="partner_shipping_address" />
+                </xpath> -->
+
+                <xpath expr="//field[@name='partner_shipping_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="extra_account_payment_term_form" model="ir.ui.view">
+            <field name="name">付款条款增加字段</field>
+            <field name="model">account.payment.term</field>
+            <field name="inherit_id" ref="account.view_payment_term_form"/>
+            <field name="arch" type="xml">
+                <field name="active" position="after">
+                    <field name="code" />
+                    <field name="payment_type" />
+                    <field name="comment_en" />
+                </field>
+            </field>
+        </record>
+
+        <record id="extra_account_payment_term_tree" model="ir.ui.view">
+            <field name="name">付款条款增加字段</field>
+            <field name="model">account.payment.term</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name" />
+                    <field name="code" />
+                    <field name="comment_en" />
+                    <field name="payment_type" />
+                </tree>
+            </field>
+        </record>
+
+    </data>
+</odoo>

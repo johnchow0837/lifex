@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+    	<record model="ir.ui.view" id="procurement_set_partner_wizard_form">
+            <field name="name">采购需求设置供应商</field>
+            <field name="model">procurement.set.partner.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="supplier_partner_id" domain="[(0, '=', 1)]" options="{'no_open': True, 'no_create': True}" />
+                        <field name="supplier_delay" />
+                    </group>
+                    <footer>
+                        <button name="action_set_partner" string="设置" type="object" class="btn-primary"/>
+                        or
+                        <button string="取消" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>
