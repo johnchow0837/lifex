@@ -307,7 +307,7 @@ class SaleOrder(models.Model):
         info_center_no_bold_border = xlwt.easyxf('font: bold false; align: wrap on, vert centre, horiz centre; borders: bottom medium, top medium, left medium, right medium', num_format_str='#,##0.00')
 
         sheet.write_merge(0, 2, 0, 11, '')
-        sheet.write_merge(0, 1, 8, 11, u'彬谷科技（上海）有限公司', title_style)
+        sheet.write_merge(0, 1, 8, 11, self.company_id.name or u'', title_style)
         sheet.write_merge(2, 2, 9, 11, u'服务热线：4009-20-3909', title3_style)
         sheet.write_merge(3, 3, 0, 11, u'报价单', title1_style)
         sheet.write_merge(4, 4, 0, 7, u'报价单编码:', title2_style)
@@ -339,7 +339,9 @@ class SaleOrder(models.Model):
         sheet.write_merge(13, 13, 0, 11, u'报价主题：    报价', info_bold_left)
         sheet.write_merge(14, 14, 0, 11, u'尊敬的' + self.partner_id.name + u'先生/小姐，', info_left)
 
-        sheet.write_merge(15, 15, 0, 11, u'非常感谢阁下对彬谷的关注及支持，我们很高兴将阁下所需产品的相关信息及报价提供给您，并深感荣幸！如果与阁下及贵司有进一步的合作，相信会是愉快的，富有成效的！', info_left)
+        sheet.write_merge(15, 15, 0, 11, 
+            u'非常感谢阁下对{company}的关注及支持，我们很高兴将阁下所需产品的相关信息及报价提供给您，并深感荣幸！如果与阁下及贵司有进一步的合作，相信会是愉快的，富有成效的！'.format(company=self.company_id.name) 
+        info_left)
 
 
         sheet.write_merge(16, 16, 0, 0, u'序号', info_center_bold_border)
@@ -382,13 +384,17 @@ class SaleOrder(models.Model):
         sheet.write_merge(line_count + 3, line_count + 3, 0, 11, u'', info_center_bold_border)
         sheet.write_merge(line_count + 4, line_count + 4, 0, 11, '', info_center_bold_border)
 
-        sheet.write_merge(line_count + 5, line_count + 5, 0, 11, u'1.本报价单受彬谷销售条款的约束。本报价单一旦签订（贵司在本报价单上签字盖章并回传彬谷即表明本报价单已签订），不论彬谷销售条款是否经双方签署，即表明贵司已经阅读并知悉彬谷销售条款的内容，且同意受其约束。', info_left)
+        sheet.write_merge(line_count + 5, line_count + 5, 0, 11, 
+            u'1.本报价单受{company}销售条款的约束。本报价单一旦签订（贵司在本报价单上签字盖章并回传{company}即表明本报价单已签订），不论{company}销售条款是否经双方签署，即表明贵司已经阅读并知悉{company}销售条款的内容，且同意受其约束。'.format(company=self.company_id.name), 
+        info_left)
         sheet.write_merge(line_count + 6, line_count + 6, 0, 11, u'2. 付款条件: ' + (self.payment_term_id.name or ''), info_left)
 
         sheet.write_merge(line_count + 7, line_count + 7, 0, 11, u'3. 交货期为估计值，会根据收到订单时的实际库存情况有所调整，交货期从收到预付款之日起算。 ', info_left)
         sheet.write_merge(line_count + 8, line_count + 8, 0, 11, u'4. 质保期：安装调试后12个月或发货后15个月，以先到者为准。', info_left)
-        sheet.write_merge(line_count + 9, line_count + 9, 0, 11, u'5. 彬谷不负责产品的具体应用。请在订购前务必仔细察看彬谷的目录或网站及生产厂商的产品规格。', info_left)
-        sheet.write_merge(line_count + 10, line_count + 10, 0, 11, u'6. 彬谷保留取消受进出口管制的产品的权利。', info_left)
+        sheet.write_merge(line_count + 9, line_count + 9, 0, 11, 
+            u'5. {company}不负责产品的具体应用。请在订购前务必仔细察看{company}的目录或网站及生产厂商的产品规格。'.format(company=self.company_id.name), 
+        info_left)
+        sheet.write_merge(line_count + 10, line_count + 10, 0, 11, u'6. {company}保留取消受进出口管制的产品的权利。'.format(company=self.company_id.name), info_left)
         sheet.write_merge(line_count + 11, line_count + 11, 0, 11, u'7. 允许分批发货。', info_left)
         sheet.write_merge(line_count + 12, line_count + 12, 0, 11, u'8. 我司银行信息：a) 上海银行张江支行  b) 03003630381。', info_left)
         sheet.write_merge(line_count + 13, line_count + 13, 0, 11, u'如果您还有任何问题，非常欢迎与我们联系。', info_left)
@@ -432,7 +438,7 @@ class SaleOrder(models.Model):
         sheet.write_merge(line_count + 23, line_count + 23, 6, 11, self.partner_id.customer_invoice_account or '', info_center_no_bold_border)
 
         sheet.write_merge(line_count + 24, line_count + 24, 0, 11, '', info_center_no_bold_border)
-        sheet.write_merge(line_count + 25, line_count + 25, 0, 11, u'阁下如有其他任何问题或任何我可协助的事宜 , 敬请随时与我或彬谷客服中心联系,谢谢!', info_left)
+        sheet.write_merge(line_count + 25, line_count + 25, 0, 11, u'阁下如有其他任何问题或任何我可协助的事宜 , 敬请随时与我或{company}客服中心联系,谢谢!'.format(company=self.company_id.name), info_left)
         sheet.write_merge(line_count + 26, line_count + 26, 0, 11, u'真诚希望再次有机会服务于阁下及令人尊敬的贵司!', info_left)
 
         fp = StringIO()
