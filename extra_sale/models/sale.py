@@ -340,7 +340,7 @@ class SaleOrder(models.Model):
         sheet.write_merge(14, 14, 0, 11, u'尊敬的' + self.partner_id.name + u'先生/小姐，', info_left)
 
         sheet.write_merge(15, 15, 0, 11, 
-            u'非常感谢阁下对{company}的关注及支持，我们很高兴将阁下所需产品的相关信息及报价提供给您，并深感荣幸！如果与阁下及贵司有进一步的合作，相信会是愉快的，富有成效的！'.format(company=self.company_id.name) 
+            u'非常感谢阁下对{company}的关注及支持，我们很高兴将阁下所需产品的相关信息及报价提供给您，并深感荣幸！如果与阁下及贵司有进一步的合作，相信会是愉快的，富有成效的！'.format(company=self.company_id.name),
         info_left)
 
 

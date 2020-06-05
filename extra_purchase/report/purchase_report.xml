@@ -121,7 +121,7 @@
                                 <br/>
                                 <br/>
                                 <b>寄发票地址
-                                <br/> 地    址：上海市浦东新区蔡伦路85弄95号九洲中心109-113室</b>
+                                <br/> 地    址：<t t-esc="o.company_id.street" /></b>
                                 <br/> 联 系 人：<span t-esc="o.create_uid.partner_id.name"/>
                                 <br/> 电    话：<span t-esc="o.create_uid.partner_id.phone"/>
                                 <br/> 邮    箱：<span t-esc="o.create_uid.partner_id.email"/>
@@ -234,8 +234,8 @@
                                 <br/>
                                 <br/>
                                 <br/>订单确认后请签字盖章回传
-                                <br/>务必随货放置<t t-esc="o.company_id.name">送货单 
-                                <br/>所有相关信件及发票上必须标有采购单号和<t t-esc="o.company_id.name">物料编号
+                                <br/>务必随货放置<t t-esc="o.company_id.name"/>送货单 
+                                <br/>所有相关信件及发票上必须标有采购单号和<t t-esc="o.company_id.name"/>物料编号
                             </td>
                             <td width="20%"/>
                             <td>
@@ -246,21 +246,24 @@
                                 <br/>
                                 <br/>
                                 <br/>
-                                <br/>
-                                <br/>
-                                <br/>
                                 <br/> 买    方：<span t-esc="o.company_id.name"/>
-                                <br/>
-                                <br/> 买方签字：________________日  期:_____________
-                                <br/>
+                                <br/> 
+                                <br/> 买方签字：_________________________
+                                <br/> 
+                                <br/> 日    期: _________________________
                                 <br/>
                                 <br/>
                                 <br/> 卖    方：<span t-esc="o.partner_id.name"/>
+                                <br/>
+                                <br/> 卖方签字：_________________________
                                 <br/> 
-                                <br/> 卖方签字：________________日  期:_____________
+                                <br/> 日    期: _________________________
                             </td>
                         </tr>
                     </table>
+                    </center>
+                </body>
+            </div>
         </t>
         </template>
 
@@ -270,7 +273,7 @@
         <div class="header">
             <table width="100%" border="0" font-color="grey">
                 <tr>
-                    <td width="30%" class="text-left"><b><font color="grey"><t t-esc="o.company_id.name">打印送货单</font></b></td>
+                    <td width="30%" class="text-left"><b><font color="grey"><t t-esc="o.company_id.name"/>打印送货单</font></b></td>
                     <td width="30%" class="text-center"><b><font color="grey">送货单编号：<t t-esc="o.name"/></font></b></td>
                     <td width="30%" class="text-right"><b><font color="grey"><ul class="list-inline">
                                                                                 <li>第</li>

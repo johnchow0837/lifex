@@ -7,7 +7,7 @@ import base64
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.osv import expression
-
+import odoo.addons.decimal_precision as dp
 
 #----------------------------------------------------------
 # Product Category
@@ -267,6 +267,23 @@ class ProductBrand(models.Model):
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
+    @api.depends('product_variant_ids', 'product_variant_ids.refrence_cost')
+    def _compute_refrence_cost(self):
+        unique_variants = self.filtered(lambda template: len(template.product_variant_ids) == 1)
+        for template in unique_variants:
+            template.refrence_cost = template.product_variant_ids.refrence_cost
+        for template in (self - unique_variants):
+            template.refrence_cost = template.product_variant_ids and template.product_variant_ids[0].refrence_cost or 0.0
+
+    @api.one
+    def _set_refrence_cost(self):
+        if len(self.product_variant_ids) == 1:
+            self.product_variant_ids.refrence_cost = self.refrence_cost
+
+    def _search_refrence_cost(self, operator, value):
+        products = self.env['product.product'].search([('refrence_cost', operator, value)], limit=None)
+        return [('id', 'in', products.mapped('product_tmpl_id').ids)]
+
     cas_code = fields.Char(string=u'化学品CAS号')
     brand_id = fields.Many2one('product.brand', string=u'产品品牌', required=False)
     package_name = fields.Char(string=u'包装', required=False)
@@ -291,9 +308,28 @@ class ProductTemplate(models.Model):
 
     product_tag = fields.Char(string=u'产品标签', index=True)
 
+    refrence_cost = fields.Float(string=u'参考成本')
+
+    refrence_cost = fields.Float(compute='_compute_refrence_cost',
+        inverse='_set_refrence_cost', search='_search_refrence_cost',
+        digits=dp.get_precision('Product Price'), groups="base.group_user",
+        string=u'参考成本')
+
     _sql_constraints = [
         ('product_brand_catno_uniq', 'unique (brand_id,cat_no)', u'每种商品产品和原厂货号组合不能重复 !')
     ]
+
+    @api.model
+    def create(self, val):
+        if val.has_key('refrence_cost') and not val.has_key('standard_price'):
+            val.update({'standard_price': val.get('refrence_cost', 0)})
+        template = super(ProductTemplate, self).create(val)
+        related_vals = {}
+        if val.get('refrence_cost'):
+            related_vals['refrence_cost'] = val['refrence_cost']
+        if related_vals:
+            template.write(related_vals)
+        return template
 
     @api.multi
     def sync_product_update(self):
@@ -321,6 +357,12 @@ class ProductTemplate(models.Model):
 class ProductProduct(models.Model):
     _inherit = "product.product"
 
+    refrence_cost = fields.Float(
+        string=u'参考成本',
+        company_dependent=True,
+        digits=dp.get_precision('Product Price'),
+        groups="base.group_user")
+
     _sql_constraints = [
         ('default_code_uniq', 'unique (default_code)', u'产品编码必须唯一 !'),
         ('barcode_uniq', 'unique (barcode)', u'产品条码必须唯一 !')
@@ -346,6 +388,9 @@ class ProductProduct(models.Model):
                 else:
                     duplicated = False
             val.update({'default_code': default_code})
+
+        if val.has_key('refrence_cost') and not val.has_key('standard_price'):
+            val.update({'standard_price': val.get('refrence_cost', 0)})
         return super(ProductProduct, self).create(val)
     
     @api.model

@@ -22,7 +22,7 @@
                     <button name="action_reset_to_draft" string="销售重置" states='to_confirm' type="object" groups="extra_sale.group_sale_user"/>
                     <button name="action_unlock" string="解锁订单" states='done' type="object" groups="extra_sale.group_sale_manager"/>
                     <button name="export_excel" string='导出报价单' states='draft' type="object"/>
-                    <button name="sync_so_update" string='同步销售单到OPC' type="object" class='btn-danger'/>
+                    <button name="sync_so_update" string='同步销售单到OPC' type="object" class='btn-danger' invisible="1"/>
                 </xpath>
 
                 <xpath expr="//button[@name='action_cancel']" position="attributes">

@@ -9,7 +9,7 @@
     'summary': 'Extra Product',
     'description': """Extra Product Model, Help User Have A Better Handle On Product Manager""",
     'website': 'https://www.odoo.com',
-    'depends': ['sale', 'purchase', 'extra_api'],
+    'depends': ['sale', 'purchase', 'extra_api', 'product'],
     'data': [
         'data/groups.xml',
         'views/product_view.xml',

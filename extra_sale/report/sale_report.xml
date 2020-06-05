@@ -11,7 +11,7 @@
                 <div class="header">
                     <table width="100%" border="0" font-color="grey">
                         <tr>
-                            <td width="30%" class="text-left"><b><font color="grey"><t t-esc="o.company_id.name">打印合同</font></b></td>
+                            <td width="30%" class="text-left"><b><font color="grey"><t t-esc="o.company_id.name"/>打印合同</font></b></td>
                             <td width="30%" class="text-center"><b><font color="grey">合同编号：<t t-esc="o.contract_num or o.name"/></font></b></td>
                             <td width="30%" class="text-right"><b><font color="grey"><ul class="list-inline">
                                                                                         <li>第</li>
@@ -87,7 +87,7 @@
             <table width="100%" border="1" cellspacing="0" cellpadding="1" bgcolor="#000000" class="pt">
               <tr bgcolor="#ffffff" height="22">
                 <td width="50%" style="border:1px solid #000"><b>甲方：<t t-esc="o.partner_id.name"/></b></td>
-                <td width="50%" style="border:1px solid #000"><b>乙方：<t t-esc="o.company_id.name"></b></td>
+                <td width="50%" style="border:1px solid #000"><b>乙方：<t t-esc="o.company_id.name"/></b></td>
               </tr>
               <tr bgcolor="#ffffff" height="22">
                 <td style="border:1px solid #000"><b>采购人员：<t t-esc="o.partner_contact_id.name or o.partner_invoice_id.name"/></b></td>
@@ -110,7 +110,7 @@
               </tr>
               <tr bgcolor="#ffffff" height="22">
                 <td style="border:1px solid #000"><b>联系地址：<t t-esc="o.partner_contact_id.street2 or o.partner_invoice_id.street2"/></b></td>
-                <td style="border:1px solid #000"><b>联系地址: 中国·上海浦东新区蔡伦路85弄95号九洲中心109-113室</b></td>
+                <td style="border:1px solid #000"><b>联系地址: <t t-esc="o.company_id.street" /></b></td>
               </tr>
               <tr bgcolor="#ffffff" height="22">
                  <td align="left" style="border:1px solid #000">
@@ -119,9 +119,9 @@
                     交货日期：详见下产品货期
                     </b>
                  </td>
-                <td style="border:1px solid #000"><b>开户银行：上海银行张江支行<br/>收款账号：03003630381
+                <td style="border:1px solid #000"><b>开户银行：中国银行有限公司上海市三林支行<br/>收款账号：442972210786
                     <br/>
-                    服务热线: 4009-20-3909
+                    服务热线: 021-64150028
                     </b></td>
               </tr>
               <tr bgcolor="#ffffff" height="22">
@@ -277,7 +277,7 @@
             <br/><br/>
             五、产品验收
             <br/>
-            5.1产品到达甲方指定的送货地点后，甲方合同签订人或指定产品接收人需对物流公司配送的产品当场开箱并进行验收，产品验收范围包括：现场接收的产品与合同内的订货产品性能是否相符、产品外观是否破损或有瑕疵、产品数量及配件数量是否缺失等。其中，无论甲方合同签订人或指定接收人在现场接收了产品并在送货单内签字（如不是合同签订人或产品指定接收人，但属于产品接收公司的员工或关联工作公司员工在快递单上对合同产品进行了签收，乙方同样视为甲方已对所配送的产品验收合格且被甲方接受），乙方即视为甲方对所配送的产品验收合格且被甲方接受，乙方将不再承担除产品质量问题以外的任何问题。如合同约定乙方安装人员需上门为对产品进行安装调试，则验收时间为安装调试完毕当天，如甲方当场不做验收，视为验收通过。<t t-esc="o.company_id.name">提醒阁下：产品接收人务必在签收送货单前当场检查物流公司所配送的产品是否存在产品故障，以减少由于未做充分检查而造成的产品损失。
+            5.1产品到达甲方指定的送货地点后，甲方合同签订人或指定产品接收人需对物流公司配送的产品当场开箱并进行验收，产品验收范围包括：现场接收的产品与合同内的订货产品性能是否相符、产品外观是否破损或有瑕疵、产品数量及配件数量是否缺失等。其中，无论甲方合同签订人或指定接收人在现场接收了产品并在送货单内签字（如不是合同签订人或产品指定接收人，但属于产品接收公司的员工或关联工作公司员工在快递单上对合同产品进行了签收，乙方同样视为甲方已对所配送的产品验收合格且被甲方接受），乙方即视为甲方对所配送的产品验收合格且被甲方接受，乙方将不再承担除产品质量问题以外的任何问题。如合同约定乙方安装人员需上门为对产品进行安装调试，则验收时间为安装调试完毕当天，如甲方当场不做验收，视为验收通过。<t t-esc="o.company_id.name"/>提醒阁下：产品接收人务必在签收送货单前当场检查物流公司所配送的产品是否存在产品故障，以减少由于未做充分检查而造成的产品损失。
             <br/>
             5.2双方约定的验收时间、验收地址___________________________________________________________________。
             <br/>
@@ -347,7 +347,7 @@
                     <b>日期：</b>
                 </td>
                 <td valign="top" background="admin/view/image/order/ehsysign.gif">
-                    <b>单位名称（章）: </b><t t-esc="o.company_id.name">
+                    <b>单位名称（章）: </b><t t-esc="o.company_id.name"/>
                     <br/>
                     <b>委托代理人：</b>
                     <br/>

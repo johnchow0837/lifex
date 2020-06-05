@@ -42,6 +42,13 @@
                 <field name="name" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </field>
+
+                <field name="standard_price" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+                <field name="standard_price" position="after">
+                    <field name="refrence_cost" />
+                </field>
             </field>
         </record>
 
@@ -55,6 +62,12 @@
                     <button name="sync_product_update_other_odoo" type="object" string="同步产品信息(子系统)" groups="extra_product.group_product_api_user"/>
                     <button name="action_delete" type="object" string="下架产品" attrs="{'invisible': [('active', '=', False), ('on_website', '=', False)]}" groups="extra_product.group_product_api_user"/>
                 </header>
+                <field name="standard_price" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+                <field name="standard_price" position="after">
+                    <field name="refrence_cost" />
+                </field>
                 <page name="sales" position="after">
                     <page string="网站信息" name="extra_info">
                         <group name="属性">
