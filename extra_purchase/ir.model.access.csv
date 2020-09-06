@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_purchase_order_delivery,access_purchase_order_delivery_all,model_purchase_order_delivery,base.group_user,1,1,1,1
+access_purchase_order_delivery_line,access_purchase_order_delivery_line_all,model_purchase_order_delivery_line,base.group_user,1,1,1,1
+access_purchase_invoice,access_purchase_invoice_all,model_purchase_invoice,base.group_user,1,1,1,1

@@ -48,6 +48,8 @@
                     <field name="purchase_comment" />
                     <field name="internal_comment" />
                     <field name="last_sync_time" />
+                    <field name="last_send_date" />
+                    <field name="send_status" />
                 </xpath>
 
                 <xpath expr="//group[@name='sale_shipping']/field[@name='warehouse_id']" position="attributes">
@@ -187,7 +189,7 @@
                 </xpath>
 
                 <xpath expr="//page[last()]" position="after">
-                    <page name='webinfo' string='网站信息'>
+                    <page name='webinfo' string='网站信息' invisible="1">
                     <group>
                         <group string="支付信息">
                             <field name="saler_user_id" />
@@ -306,6 +308,9 @@
             <field name="arch" type="xml">
                 <field name="amount_total" position="after">
                     <field name="predict_margin_rate" />
+                    <field name="last_send_date" />
+                    <field name="send_status" />
+                    <field name="invoice_status"/>
                 </field>
                 <field name="state" position="after">
                     <field name="approve_reason" />
@@ -320,6 +325,8 @@
             <field name="arch" type="xml">
                 <field name="amount_total" position="after">
                     <field name="predict_margin_rate" />
+                    <field name="last_send_date" />
+                    <field name="send_status" />
                 </field>
             </field>
         </record>

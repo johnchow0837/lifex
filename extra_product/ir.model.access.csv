@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_product_brand,access_product_brand_all,model_product_brand,base.group_user,1,1,1,1
+access_product_pricelist_currency,access_product_pricelist_currency_all,model_product_pricelist_currency,base.group_user,1,1,1,1
+access_product_costlist_currency,access_product_costlist_currency_all,model_product_costlist_currency,base.group_user,1,1,1,1

@@ -8,8 +8,8 @@
             <field name="inherit_id" ref="product.product_category_form_view"/>
             <field name="arch" type="xml">
                 <div name="button_box" position="inside">
-                    <button name="sync_categ_update" type="object" string="同步分类信息" groups="extra_product.group_product_api_user"/>
-                    <button name="action_delete" type="object" string="删除分类" groups="extra_product.group_product_api_user"/>
+                    <button name="sync_categ_update" type="object" invisible="1" string="同步分类信息" groups="extra_product.group_product_api_user"/>
+                    <button name="action_delete" type="object" invisible="1" string="删除分类" groups="extra_product.group_product_api_user"/>
                 </div>
             </field>
         </record>
@@ -58,9 +58,9 @@
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
                 <header position="inside">
-                    <button name="sync_product_update" type="object" string="同步产品信息" groups="extra_product.group_product_api_user"/>
-                    <button name="sync_product_update_other_odoo" type="object" string="同步产品信息(子系统)" groups="extra_product.group_product_api_user"/>
-                    <button name="action_delete" type="object" string="下架产品" attrs="{'invisible': [('active', '=', False), ('on_website', '=', False)]}" groups="extra_product.group_product_api_user"/>
+                    <button name="sync_product_update" type="object" invisible="1" string="同步产品信息" groups="extra_product.group_product_api_user"/>
+                    <button name="sync_product_update_other_odoo" invisible="1" type="object" string="同步产品信息(子系统)" groups="extra_product.group_product_api_user"/>
+                    <button name="action_delete" type="object" invisible="1" string="下架产品" attrs="{'invisible': [('active', '=', False), ('on_website', '=', False)]}" groups="extra_product.group_product_api_user"/>
                 </header>
                 <field name="standard_price" position="attributes">
                     <attribute name="invisible">1</attribute>
@@ -80,6 +80,7 @@
                                 <field name="comment_desc_en" />
                                 <field name="product_model" />
                                 <field name="duty_rate" />
+                                <field name="category_tax_code" />
                             </group>
                             <group>
                                 <field name="storage_condition" />
@@ -234,8 +235,8 @@
             <field name="arch" type="xml">
                 <form>
                     <header>
-                        <button name="sync_brand_update" type="object" string="同步品牌信息" groups="extra_product.group_product_api_user"/>
-                        <button name="action_delete" type="object" string="删除品牌" attrs="{'invisible': [('active', '=', False)]}" groups="extra_product.group_product_api_user"/>
+                        <button name="sync_brand_update" type="object" string="同步品牌信息" groups="extra_product.group_product_api_user" invisible="1"/>
+                        <button name="action_delete" type="object" string="删除品牌" attrs="{'invisible': [('active', '=', False)]}" groups="extra_product.group_product_api_user" invisible="1" />
                     </header>
                     <sheet>
                         <group name="base_info">
@@ -296,12 +297,26 @@
 
         <menuitem name="产品品牌" action="action_extra_brand_tree_view" id="menu_action_extra_brand_tree_view" parent="sales_team.menu_sales" sequence="40"/>
 
-        <menuitem name="批量同步产品" action="action_product_batch_sync_view" id="menu_product_batch_sync_view" parent="sales_team.menu_sales" 
-            groups="extra_product.group_product_api_user" sequence="40"/>
+<!--         <menuitem name="批量同步产品" action="action_product_batch_sync_view" id="menu_product_batch_sync_view" parent="sales_team.menu_sales" 
+            groups="extra_product.group_product_api_user" sequence="40" /> -->
 
         <menuitem name="产品外币价格" action="action_extra_product_pricelist_tree_view" id="menu_action_extra_product_pricelist_tree_view" parent="sales_team.menu_sales" sequence="50"/>
 
         <menuitem name="产品外币成本" action="action_extra_product_costlist_tree_view" id="menu_action_extra_product_costlist_tree_view" parent="purchase.menu_procurement_management" sequence="60"/>
+
+    </data>
+
+    <data noupdate="1">
+
+        <record id="product_product_code_seq" model="ir.sequence">
+            <field name="name">product.product</field>
+            <field name="code">product.product.code</field>
+            <field name="prefix">LX</field>
+            <field name="padding">8</field>
+            <field name="number_increment">1</field>
+            <field name="number_next">1</field>
+            <field name="company_id" eval="False"/>
+        </record>
 
     </data>
 </odoo>

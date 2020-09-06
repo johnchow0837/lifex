@@ -314,7 +314,8 @@ class ProductTemplate(models.Model):
         inverse='_set_refrence_cost', search='_search_refrence_cost',
         digits=dp.get_precision('Product Price'), groups="base.group_user",
         string=u'参考成本')
-
+    category_tax_code = fields.Char(string=u'税收分类编码')
+    
     _sql_constraints = [
         ('product_brand_catno_uniq', 'unique (brand_id,cat_no)', u'每种商品产品和原厂货号组合不能重复 !')
     ]
@@ -379,15 +380,16 @@ class ProductProduct(models.Model):
     @api.model
     def create(self, val):
         if not val.get('default_code', ''):
-            default_code = self.get_random_code()
-            duplicated = True
-            while duplicated:
-                product_id = self.search([('default_code', '=', default_code)], limit=1)
-                if product_id:
-                    default_code = self.get_random_code()
-                else:
-                    duplicated = False
-            val.update({'default_code': default_code})
+            # default_code = self.get_random_code()
+            # duplicated = True
+            # while duplicated:
+            #     product_id = self.search([('default_code', '=', default_code)], limit=1)
+            #     if product_id:
+            #         default_code = self.get_random_code()
+            #     else:
+            #         duplicated = False
+            # val.update({'default_code': default_code})
+            val['default_code'] = self.env['ir.sequence'].get('product.product.code')
 
         if val.has_key('refrence_cost') and not val.has_key('standard_price'):
             val.update({'standard_price': val.get('refrence_cost', 0)})

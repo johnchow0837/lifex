@@ -19,6 +19,7 @@
         'views/purchase_view.xml',
         'data/stock_data.xml',
         'report/purchase_report.xml',
+        'ir.model.access.csv',
     ],
     'demo': [],
     'css': [],

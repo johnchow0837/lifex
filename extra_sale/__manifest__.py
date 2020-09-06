@@ -15,6 +15,7 @@
         'views/sale_view.xml',
         'data/stock_data.xml',
         'report/sale_report.xml',
+        'ir.model.access.csv'
     ],
     'demo': [],
     'css': [],

@@ -13,6 +13,7 @@
     'data': [
         'views/stock_view.xml',
         'report/stock_report.xml',
+        'ir.model.access.csv',
     ],
     'demo': [],
     'css': [],

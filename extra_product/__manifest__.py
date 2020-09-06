@@ -13,6 +13,7 @@
     'data': [
         'data/groups.xml',
         'views/product_view.xml',
+        'ir.model.access.csv',
     ],
     'demo': [],
     'css': [],

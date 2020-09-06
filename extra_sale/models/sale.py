@@ -19,6 +19,31 @@ class SaleOrder(models.Model):
     _inherit = "sale.order"
     _description = u"销售单"
 
+    @api.depends('order_line', 'order_line.product_uom_qty', 'order_line.qty_delivered')
+    def get_send_info(self):
+        prec = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        for order in self:
+            if any(
+                    float_compare(s.qty_delivered, 0, precision_digits=prec) > 0
+                    and
+                    float_compare(s.qty_delivered, s.product_uom_qty, precision_digits=prec) < 0
+                    for s in order.order_line
+            ):
+                order.send_status = 'partial'
+                continue
+            elif all(float_compare(s.qty_delivered, 0, precision_digits=prec) == 0 for s in order.order_line):
+                order.send_status = 'no'
+                continue
+            elif all(float_compare(s.qty_delivered, s.product_uom_qty, precision_digits=prec) == 0 for s in order.order_line):
+                order.send_status = 'yes'
+                continue
+            else:
+                order.send_status = 'no'
+                continue
+            move_lines = order.mapped('order_line.procurement_ids.move_ids').filtered(lambda s: s.state == 'done')
+            order.last_send_date = max(move_lines.mapped('date'))
+        return True
+
     @api.depends('order_line', 'order_line.cost_price', 'amount_total')
     def get_predict_margin_rate(self):
         for order in self:
@@ -78,6 +103,9 @@ class SaleOrder(models.Model):
     partner_contact_address = fields.Char(related='partner_contact_id.street', string=u'联系人详细地址', readonly=True, required=False)
 
     last_sync_time = fields.Datetime(compute='_get_last_sync_time', store=False, readonly=True, string=u'最后同步时间')
+
+    last_send_date = fields.Datetime(compute='get_send_info', store=True, string=u'最后发货时间')
+    send_status = fields.Selection(compute='get_send_info', selection=[('no', u'未发货'), ('partial', u'部分发货'), ('yes', u'完全发货')], string=u'发货状态', readonly=True)
 
     @api.multi
     def sync_so_update(self):
