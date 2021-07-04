@@ -21,24 +21,24 @@ class ProcurementSetPartnerWizard(models.TransientModel):
     supplier_partner_id = fields.Many2one('res.partner', string=u'供应商', required=True)
     supplier_delay = fields.Float(string=u'供应商货期', default=0)
 
-    @api.model
-    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
-        res = super(ProcurementSetPartnerWizard, self).fields_view_get(
-            view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
-        if self._context.get('supplier_partner_id'):
-            doc = etree.XML(res['arch'])
-            for node in doc.xpath("//field[@name='supplier_partner_id']"):
-                node.set('domain', "[('id', '=', %s)]"%self._context.get('supplier_partner_id', []))
+    # @api.model
+    # def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+    #     res = super(ProcurementSetPartnerWizard, self).fields_view_get(
+    #         view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+    #     if self._context.get('supplier_partner_id'):
+    #         doc = etree.XML(res['arch'])
+    #         for node in doc.xpath("//field[@name='supplier_partner_id']"):
+    #             node.set('domain', "[('id', '=', %s)]"%self._context.get('supplier_partner_id', []))
 
-            res['arch'] = etree.tostring(doc)
-        return res
+    #         res['arch'] = etree.tostring(doc)
+    #     return res
 
     @api.multi
     def action_set_partner(self):
-    	procurement_ids = self.env['procurement.order'].browse(self.env.context.get('active_ids', []))
+        procurement_ids = self.env['procurement.order'].browse(self.env.context.get('active_ids', []))
 
-    	if any(self.supplier_partner_id.id not in s.product_id.seller_ids.mapped('name').ids for s in procurement_ids):
-    		raise UserError(u'所选择的供应商没有被需求设置')
+        # if any(self.supplier_partner_id.id not in s.product_id.seller_ids.mapped('name').ids for s in procurement_ids):
+        #     raise UserError(u'所选择的供应商没有被需求设置')
 
         val = {'supplier_partner_id': self.supplier_partner_id.id}
 
@@ -47,9 +47,9 @@ class ProcurementSetPartnerWizard(models.TransientModel):
 
         _logger.info(val)
 
-    	procurement_ids.write(val)
+        procurement_ids.write(val)
 
         procurement_ids.with_context(manu_set=True).set_sup_info()
 
-    	return True
+        return True
 

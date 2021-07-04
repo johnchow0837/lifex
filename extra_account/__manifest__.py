@@ -9,7 +9,10 @@
     'summary': 'Extra Account',
     'description': """Extra Account""",
     'website': 'https://www.odoo.com',
-    'depends': ['stock_account', 'account_cancel'],
+    'depends': [
+        'stock_account', 'account_cancel',
+        'sale', 'purchase',
+    ],
     'data': [
         'data/groups.xml',
         'views/account.xml',

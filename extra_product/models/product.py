@@ -315,6 +315,12 @@ class ProductTemplate(models.Model):
         digits=dp.get_precision('Product Price'), groups="base.group_user",
         string=u'参考成本')
     category_tax_code = fields.Char(string=u'税收分类编码')
+    property_valuation = fields.Selection([
+        ('manual_periodic', 'Periodic (manual)'),
+        ('real_time', 'Perpetual (automated)')], string='Inventory Valuation',
+        company_dependent=True, copy=True, default='real_time',
+        help="If perpetual valuation is enabled for a product, the system will automatically create journal entries corresponding to stock moves, with product price as specified by the 'Costing Method'" \
+             "The inventory variation account set on the product category will represent the current inventory value, and the stock input and stock output account will hold the counterpart moves for incoming and outgoing products.")
     
     _sql_constraints = [
         ('product_brand_catno_uniq', 'unique (brand_id,cat_no)', u'每种商品产品和原厂货号组合不能重复 !')

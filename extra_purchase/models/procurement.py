@@ -549,22 +549,22 @@ class ProcurementOrder(models.Model):
     @api.multi
     def set_supplier_partner_server_action(self):
 
-        partner_ids = self.mapped('product_id.seller_ids.name')
-        if not partner_ids:
-            raise UserError(u'勾选需求未配置供应商')
+        # partner_ids = self.mapped('product_id.seller_ids.name')
+        # if not partner_ids:
+        #     raise UserError(u'勾选需求未配置供应商')
 
-        product_ids = self.mapped('product_id')
+        # product_ids = self.mapped('product_id')
 
-        all_partner = self.env['res.partner'].browse()
-        for partner_id in partner_ids:
-            if all(partner_id in product_id.mapped('seller_ids.name') for product_id in product_ids):
-                all_partner |= partner_id
+        # all_partner = self.env['res.partner'].browse()
+        # for partner_id in partner_ids:
+        #     if all(partner_id in product_id.mapped('seller_ids.name') for product_id in product_ids):
+        #         all_partner |= partner_id
 
-        if not all_partner:
-            raise UserError(u'勾选需求没有公共供应商')
+        # if not all_partner:
+        #     raise UserError(u'勾选需求没有公共供应商')
 
-        ctx = self.env.context.copy()
-        ctx.update({'supplier_partner_id': all_partner.ids})
+        # ctx = self.env.context.copy()
+        # ctx.update({'supplier_partner_id': all_partner.ids})
 
         return {
             'type': 'ir.actions.act_window',
@@ -572,7 +572,7 @@ class ProcurementOrder(models.Model):
             'view_mode': 'form',
             'target': 'new',
             'res_model': 'procurement.set.partner.wizard',
-            'context': ctx,
+            # 'context': ctx,
         }
 
     @api.multi

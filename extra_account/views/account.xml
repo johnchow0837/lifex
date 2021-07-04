@@ -34,12 +34,88 @@
             <field name="arch" type="xml">
                 <field name="payment_type" position="after">
                     <field name="is_pre_payment" />
+                    <field name="amount_residual" />
                 </field>
                 <button name="post" position="after">
-                    <button name="action_writeoff" type="object" string='冲销交易' attrs="{'invisible': ['|', ('state', '!=', 'posted'), ('is_pre_payment', '=', False)]}"/>
+                    <button name="action_view_reverse_wizard" type="object" string='冲销交易' attrs="{'invisible': ['|', ('state', '!=', 'posted'), ('is_pre_payment', '=', False)]}"/>
                 </button>
                 <field name="partner_id" position="attributes">
                     <attribute name="options">{'no_create': True}</attribute>
+                </field>
+                <field name="communication" position="after">
+<!--                    <field name="order_name" />-->
+                    <field name="sale_id" />
+                    <field name="purchase_id" />
+                </field>
+            </field>
+        </record>
+
+        <record id="view_account_invoice_form_inherit" model="ir.ui.view">
+            <field name="name">预付核销按钮(销售)</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="model">account.invoice</field>
+            <field name="arch" type="xml">
+                <field name="payments_widget" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+                <field name="outstanding_credits_debits_widget" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+                <button name="%(account.action_account_invoice_refund)d" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </button>
+
+<!--                <button name="action_invoice_open" position="attributes">-->
+<!--                    <attribute name="invisible">1</attribute>-->
+<!--                </button>-->
+
+<!--                <button name="action_invoice_open" position="after">-->
+<!--                    <button name="action_invoice_open_check" type="object" states="draft,proforma2" string="验证" class="oe_highlight" groups="account.group_account_invoice"/>-->
+<!--                </button>-->
+            </field>
+        </record>
+
+        <record id="view_account_invoice_supplier_form_inherit" model="ir.ui.view">
+            <field name="name">预付核销按钮(采购)</field>
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="model">account.invoice</field>
+            <field name="arch" type="xml">
+                <field name="payments_widget" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+                <field name="outstanding_credits_debits_widget" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+                <button name="%(account.action_account_invoice_refund)d" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </button>
+                <header position="inside">
+                    <button name="action_payment_by_invoice_wizard" type="object"
+                            attrs="{'invisible': ['|', '|', ('remaining_order_payment_amount', '&lt;', 0.01), ('type', '!=', 'in_invoice'), ('state', '!=', 'open')]}"
+                            string="付款" class="oe_highlight" groups="account.group_account_invoice"/>
+                </header>
+<!--                <button name="action_invoice_open" position="attributes">-->
+<!--                    <attribute name="invisible">1</attribute>-->
+<!--                </button>-->
+<!--                <button name="action_invoice_open" position="after">-->
+<!--                    <button name="action_invoice_open_check" type="object" states="draft,proforma2" string="验证" class="oe_highlight" groups="account.group_account_invoice"/>-->
+<!--                </button>-->
+                <field name="residual" position="after">
+                    <field name="remaining_order_payment_amount" />
+                </field>
+            </field>
+        </record>
+
+        <record id="view_account_invoice_supplier_tree_inherit" model="ir.ui.view">
+            <field name="name">发票增加字段(采购)</field>
+            <field name="inherit_id" ref="account.invoice_supplier_tree"/>
+            <field name="model">account.invoice</field>
+            <field name="arch" type="xml">
+                <field name="residual_signed" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+                <field name="residual_signed" position="after">
+                    <field name="remaining_order_payment_amount" />
                 </field>
             </field>
         </record>
@@ -52,9 +128,595 @@
                 <button name="cancel" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </button>
+                <form position="attributes">
+                    <attribute name="create">0</attribute>
+                    <attribute name="delete">0</attribute>
+                    <attribute name="edit">0</attribute>
+                </form>
             </field>
         </record>
 
-        <menuitem action="account.action_account_payments_payable" id="menu_action_account_payments_payable_purchase" parent="purchase.menu_procurement_management" sequence="20" groups="extra_account.group_purchase_account_user" name="采购付款"/>
+        <record id="view_account_payment_tree_inherit" model="ir.ui.view">
+            <field name="name">收付款增加SO号</field>
+            <field name="inherit_id" ref="account.view_account_payment_tree"/>
+            <field name="model">account.payment</field>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="sale_id" />
+                    <field name="purchase_id" />
+                    <field name="communication" />
+                </field>
+                <tree position="attributes">
+                    <attribute name="create">0</attribute>
+                    <attribute name="delete">0</attribute>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_account_payment_write_off_wizard" model="ir.ui.view">
+            <field name="name">冲销</field>
+            <field name="model">account.payment.write.off.wizard</field>
+            <field name="arch" type="xml">
+                <form string="冲销">
+                    <group>
+                        <field name="journal_id" options="{'no_create': True}" domain="[('type', 'in', ('bank', 'cash'))]"/>
+                        <field name="reverse_date" />
+                        <field name="amount" />
+                    </group>
+                    <footer>
+                        <button name="button_reverse" string="冲销" type="object" class="btn-primary"/>
+                        <button string="取消" class="btn-default" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_account_payment_return_wizard" model="ir.ui.view">
+            <field name="name">退款</field>
+            <field name="model">account.payment.return.wizard</field>
+            <field name="arch" type="xml">
+                <form string="退款">
+                    <group>
+                        <field name="amount" />
+                    </group>
+                    <footer>
+                        <button name="button_return" string="退款" type="object" class="btn-primary"/>
+                        <button string="取消" class="btn-default" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_account_invoice_pre_check_wizard" model="ir.ui.view">
+            <field name="name">发票核销预付弹窗</field>
+            <field name="model">account.invoice.pre.check.wizard</field>
+            <field name="arch" type="xml">
+                <form string="发票核销预付弹窗">
+                    <group>
+                        <field name="invoice_ids" widget="many2many_tags" />
+                        <field name="journal_id" options="{'no_create': True}" domain="[('type', 'in', ('bank', 'cash'))]"/>
+                        <field name="reverse_date" />
+                        <field name="payment_lines" >
+                            <tree create="0" delete="0" editable="bottom">
+                                <field name="payment_id" />
+                                <field name="amount_residual" />
+                                <field name="amount" />
+                            </tree>
+                        </field>
+                    </group>
+                    <footer>
+                        <button name="action_confirm" string="确认" type="object" class="btn-primary"/>
+                        <button string="取消" class="btn-default" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="extra_account_sale_order_tree" model="ir.ui.view">
+            <field name="name">报价单增加收款字段</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_quotation_tree"/>
+            <field name="priority">5</field>
+            <field name="arch" type="xml">
+                <field name="amount_total" position="after">
+                    <field name="payment_amount" sum="Amount"/>
+                    <field name="remaining_payment_amount" sum="Amount"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="extra_account_sale_order_sale_tree" model="ir.ui.view">
+            <field name="name">销售单增加收款字段</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_tree"/>
+            <field name="priority">5</field>
+            <field name="arch" type="xml">
+                <field name="amount_total" position="after">
+                    <field name="payment_amount" sum="Amount"/>
+                    <field name="remaining_payment_amount" sum="Amount"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="extra_account_sale_order_form" model="ir.ui.view">
+            <field name="name">销售单增加收款字段</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                 <xpath expr="//field[@name='payment_term_id']" position="after">
+                     <field name="payment_amount" />
+                     <field name="remaining_payment_amount" />
+                 </xpath>
+                <xpath expr="//notebook[1]" position="inside">
+                    <page string="收款">
+                        <field name="payment_ids" options="{'reload_on_button': True}" readonly="1">
+                            <tree ecoration-info="state=='draft'"
+                                  decoration-muted="state=='reconciled'"
+                                  edit="false"
+                                  colors="red: payment_type == 'outbound'"
+                            >
+                                <field name="payment_date"/>
+                                <field name="name"/>
+                                <field name="journal_id"/>
+                                <field name="payment_method_id"/>
+                                <field name="partner_id" string="Customer"/>
+                                <field name="amount" sum="Amount" invisible="1"/>
+                                <field name="actual_amount" sum="Amount" />
+                                <field name="remaining_payment_amount" />
+                                <field name="state"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="currency_id" invisible="1"/>
+                                <field name="partner_type" invisible="1"/>
+                                <field name="payment_type" />
+                                <button name="action_reverse" type="object" states="posted" string="红冲" invisible="1"/>
+                                <button name="cancel" type="object" states="posted" string="取消" invisible="1"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+                <header position="inside">
+                    <button name="action_payment_wizard"
+                            string="收款"
+                            type="object"
+                            attrs="{'invisible': [('state', 'not in', ('done', 'sale'))]}" invisible="1"/>
+                    <button name="action_return_payment_wizard"
+                            string="退款"
+                            type="object"
+                            attrs="{'invisible': [('state', 'not in', ('cancel', 'done', 'sale'))]}" />
+<!--                    <button name="action_payment_wizard"-->
+<!--                            string="收款"-->
+<!--                            type="object"-->
+<!--                            attrs="{'invisible': ['|', '&amp;', ('remaining_payment_amount', '&lt;', '0.01'), ('remaining_payment_amount', '&gt;', '0.01'), ('state', 'not in', ('cancel', 'done', 'sale'))]}"/>-->
+                </header>
+            </field>
+        </record>
+
+        <record id="extra_account_purchase_order_tree" model="ir.ui.view">
+            <field name="name">采购单单增加字段</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_tree"/>
+            <field name="priority">5</field>
+            <field name="arch" type="xml">
+                <field name="state" position="before">
+                    <field name="payment_amount" sum="Amount"/>
+                    <field name="remaining_payment_amount" sum="Amount"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="extra_account_purchase_order_form" model="ir.ui.view">
+            <field name="name">采购单单增加字段</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                 <xpath expr="//field[@name='origin']" position="after">
+                     <field name="payment_amount" />
+                     <field name="remaining_payment_amount" />
+                 </xpath>
+                <xpath expr="//notebook[1]" position="inside">
+                    <page string="付款">
+                        <field name="payment_ids" readonly="1" options="{'reload_on_button': True}">
+                            <tree decoration-info="state=='draft'"
+                                  decoration-muted="state=='reconciled'"
+                                  edit="false"
+                                  colors="red: payment_type == 'inbound'"
+                            >
+                                <field name="payment_date"/>
+                                <field name="name"/>
+                                <field name="journal_id"/>
+                                <field name="payment_method_id"/>
+                                <field name="partner_id" string="Customer"/>
+                                <field name="amount" sum="Amount" invisible="1"/>
+                                <field name="actual_amount" sum="Amount" />
+                                <field name="remaining_payment_amount" />
+                                <field name="state"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="currency_id" invisible="1"/>
+                                <field name="partner_type" invisible="1"/>
+                                <field name="payment_type" />
+                                <button name="action_reverse" type="object" states="posted" string="红冲" invisible="1"/>
+                                <button name="cancel" type="object" states="posted" string="取消" invisible="1"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+                <header position="inside">
+                    <button name="action_payment_wizard"
+                            string="付款"
+                            type="object"
+                            invisible="1"
+                            attrs="{'invisible': ['|', '&amp;', ('remaining_payment_amount', '&lt;', '0.01'), ('remaining_payment_amount', '&gt;', '0.01'), ('state', 'not in', ('cancel', 'done', 'sale'))]}"/>
+                    <button name="action_return_payment_wizard"
+                            string="退款"
+                            type="object"
+                            attrs="{'invisible': [('state', 'not in', ('cancel', 'done', 'purchase'))]}" />
+                </header>
+            </field>
+        </record>
+
+        <record id="view_order_payment_wizard" model="ir.ui.view">
+            <field name="name">收/付款弹窗</field>
+            <field name="model">order.payment.wizard</field>
+            <field name="arch" type="xml">
+                <form string="收/付款弹窗">
+                    <group>
+                        <field name="payment_type" readonly="1"/>
+                        <field name="payment_date" />
+                        <field name="journal_id" options="{'no_open': True, 'no_create': True}" domain="[('type', 'in', ('bank', 'cash'))]"/>
+                        <field name="amount" />
+                        <field name="communication" />
+                    </group>
+                    <footer>
+                        <button name="action_pay" string="确认" type="object" class="btn-primary" confirm="确认下日期及金额是否有误，提交后不可再修改！"
+                                invisible="context.get('action_refund')"/>
+                        <button name="action_return_pay" string="确认" type="object" class="btn-primary" confirm="确认下日期及金额是否有误，提交后不可再修改！"
+                                invisible="not context.get('action_refund')"/>
+                        <button string="取消" class="btn-default" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_account_payment_partner_customer_tree" model="ir.ui.view">
+            <field name="name">按客户收款</field>
+            <field name="model">account.payment.partner</field>
+            <field name="arch" type="xml">
+                <tree delete="0" default_order="id desc">
+                    <field name="id" string="序号" />
+                    <field name="partner_id" string="客户"/>
+                    <field name="payment_date" />
+                    <field name="amount" sum="Amount"/>
+                    <field name="remaining_amount" sum="Amount"/>
+                    <field name="partner_type" invisible="1"/>
+                    <field name="communication" />
+                    <field name="journal_id" />
+                    <field name="origin" />
+                    <field name="state" />
+                    <field name="payment_ids" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_account_payment_partner_customer_search" model="ir.ui.view">
+            <field name="name">按客户收款search</field>
+            <field name="model">account.payment.partner</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="partner_id" />
+                    <field name="payment_ids" filter_domain="[('payment_ids.sale_id', '=', self)]" />
+                </search>
+            </field>
+        </record>
+
+        <record id="view_account_payment_partner_supplier_search" model="ir.ui.view">
+            <field name="name">按供应商付款search</field>
+            <field name="model">account.payment.partner</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="partner_id" />
+                    <field name="payment_ids" filter_domain="[('payment_ids.purchase_id', '=', self)]" />
+                </search>
+            </field>
+        </record>
+
+        <record id="view_account_payment_partner_customer_form" model="ir.ui.view">
+            <field name="name">按客户收款</field>
+            <field name="model">account.payment.partner</field>
+            <field name="arch" type="xml">
+                <form delete="0">
+                    <header>
+                        <button name="action_confirm" type="object" states="draft" string="确认" />
+                        <button name="action_cancel" type="object" states="confirmed" string="作废" confirm="是否确认作废？"/>
+                        <button name="action_payment_wizard" type="object" states="confirmed" string="分配" />
+                    </header>
+                    <sheet>
+                    <group>
+                        <field name="id" string="序号" readonly="1"/>
+                        <field name="partner_id"
+                               attrs="{'readonly': [('state', '!=', 'draft')]}"
+                               options="{'no_create': True, 'no_open': True}"
+                               string="客户" domain="[('customer', '=', True), ('parent_id', '=', False)]"/>
+                        <field name="payment_date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        <field name="amount" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        <field name="remaining_amount" readonly="1"/>
+                        <field name="partner_type" invisible="1"/>
+                        <field name="communication" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        <field name="journal_id"
+                               domain="[('type', 'in', ('bank', 'cash'))]"
+                               attrs="{'readonly': [('state', '!=', 'draft')]}"
+                               options="{'no_create': True, 'no_open': True}"/>
+                        <field name="origin" />
+                        <field name="state" readonly="1"/>
+                    </group>
+                    <field name="payment_ids" readonly="1" options="{'reload_on_button': True}">
+                        <tree decoration-info="state=='draft'"
+                              decoration-muted="state=='reconciled'"
+                              edit="false"
+                              colors="red: payment_type == 'outbound'"
+                        >
+                            <field name="sale_id" />
+                            <field name="purchase_id" invisible="1"/>
+                            <field name="payment_date"/>
+                            <field name="name"/>
+                            <field name="journal_id"/>
+                            <field name="payment_method_id"/>
+                            <field name="partner_id" string="客户" invisible="1"/>
+                            <field name="amount" sum="Amount" invisible="1"/>
+                            <field name="actual_amount" sum="Amount" />
+                            <field name="remaining_payment_amount" />
+                            <field name="state"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="partner_type" invisible="1"/>
+                            <field name="payment_type" />
+                            <button name="action_reverse" type="object" states="posted" string="红冲" invisible="1"/>
+                            <button name="action_view_return_wizard" type="object" states="posted" string="退款"
+                                    attrs="{'invisible': [('payment_type', '!=', 'inbound')]}"/>
+                            <button name="cancel" type="object" states="posted" string="取消" confirm="是否确认取消？"/>
+                        </tree>
+                    </field>
+                </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_account_payment_partner_supplier_tree" model="ir.ui.view">
+            <field name="name">按供应商付款</field>
+            <field name="model">account.payment.partner</field>
+            <field name="arch" type="xml">
+                <tree delete="0" default_order="id desc">
+                    <field name="id" string="序号" />
+                    <field name="partner_id" string="供应商"/>
+                    <field name="payment_date" />
+                    <field name="amount" sum="Amount"/>
+                    <field name="remaining_amount" sum="Amount"/>
+                    <field name="partner_type" invisible="1"/>
+                    <field name="communication" />
+                    <field name="journal_id" />
+                    <field name="origin" />
+                    <field name="state" />
+                    <field name="payment_ids" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_account_payment_partner_supplier_form" model="ir.ui.view">
+            <field name="name">按供应商付款</field>
+            <field name="model">account.payment.partner</field>
+            <field name="arch" type="xml">
+                <form delete="0">
+                    <header>
+                        <button name="action_confirm" type="object" states="draft" string="确认" />
+                        <button name="action_cancel" type="object" states="confirmed" string="作废" confirm="是否确认作废？"/>
+                        <button name="action_payment_wizard" type="object" states="confirmed" string="分配" />
+                    </header>
+                    <sheet>
+                    <group>
+                        <field name="id" string="序号" />
+                        <field name="partner_id"
+                               options="{'no_create': True, 'no_open': True}"
+                               attrs="{'readonly': [('state', '!=', 'draft')]}"
+                               string="供应商" domain="[('supplier', '=', True), ('parent_id', '=', False)]"/>
+                        <field name="payment_date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        <field name="amount" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        <field name="remaining_amount" readonly="1"/>
+                        <field name="partner_type" invisible="1"/>
+                        <field name="communication" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        <field name="journal_id"
+                               attrs="{'readonly': [('state', '!=', 'draft')]}"
+                               domain="[('type', 'in', ('bank', 'cash'))]"
+                               options="{'no_create': True, 'no_open': True}"/>
+                        <field name="origin" />
+                        <field name="state" readonly="1"/>
+                    </group>
+                    <field name="payment_ids" readonly="1" options="{'reload_on_button': True}">
+                        <tree decoration-info="state=='draft'"
+                              decoration-muted="state=='reconciled'"
+                              edit="false"
+                              colors="red: payment_type == 'inbound'"
+                        >
+                            <field name="sale_id" invisible="1"/>
+                            <field name="purchase_id"/>
+                            <field name="payment_date"/>
+                            <field name="name"/>
+                            <field name="journal_id"/>
+                            <field name="payment_method_id"/>
+                            <field name="partner_id" string="供应商" invisible="1"/>
+                            <field name="amount" sum="Amount" invisible="1"/>
+                            <field name="actual_amount" sum="Amount" />
+                            <field name="remaining_payment_amount" />
+                            <field name="state"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="partner_type" invisible="1"/>
+                            <field name="payment_type" />
+                            <button name="action_reverse" type="object" states="posted" string="红冲" invisible="1"/>
+                            <button name="action_view_return_wizard" type="object" states="posted" string="退款"
+                                    attrs="{'invisible': [('payment_type', '!=', 'outbound')]}"/>
+                            <button name="cancel" type="object" states="posted" string="取消" confirm="是否确认取消？"/>
+                        </tree>
+                    </field>
+                </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_account_payment_customer_wizard" model="ir.ui.view">
+            <field name="name">收款弹窗</field>
+            <field name="model">account.payment.partner.wizard</field>
+            <field name="arch" type="xml">
+                <form string="收/付款弹窗">
+                    <group>
+                        <field name="payment_partner_id" readonly="1" options="{'no_open': True}"/>
+                        <field name="remaining_amount" readonly="1"/>
+                        <field name="partner_id" invisible="1" />
+                    </group>
+                    <field name="payment_ids" context="{'default_partner_id': partner_id}">
+                        <tree editable="bottom">
+                            <field name="partner_id" invisible="1" />
+                            <field name="sale_id" required="1"
+                                   options="{'no_create': True, 'no_open': True}"
+                                   domain="[('partner_id', '=', partner_id), ('remaining_payment_amount', '>', 0.01)]"/>
+<!--                            <field name="payment_type" />-->
+                            <field name="remaining_payment_amount" readonly="1"/>
+                            <field name="amount" required="1"/>
+                        </tree>
+                    </field>
+                    <footer>
+                        <button name="action_order_pay" string="确认" type="object" class="btn-primary" confirm="确认下日期及金额是否有误，提交后不可再修改！"/>
+                        <button string="取消" class="btn-default" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_account_payment_supplier_wizard" model="ir.ui.view">
+            <field name="name">付款弹窗</field>
+            <field name="model">account.payment.partner.wizard</field>
+            <field name="arch" type="xml">
+                <form string="收/付款弹窗">
+                    <group>
+                        <field name="payment_partner_id" readonly="1" options="{'no_open': True}"/>
+                        <field name="remaining_amount" readonly="1"/>
+                        <field name="partner_id" invisible="1" />
+                    </group>
+                    <field name="payment_ids" context="{'default_partner_id': partner_id}">
+                        <tree editable="bottom">
+                            <field name="partner_id" invisible="1" />
+                            <field name="purchase_id"
+                                   options="{'no_create': True, 'no_open': True}"
+                                   required="1" domain="[('partner_id', '=', partner_id), ('remaining_payment_amount', '>', 0.01)]"/>
+                            <field name="remaining_payment_amount" readonly="1"/>
+                            <field name="amount" required="1"/>
+                        </tree>
+                    </field>
+                    <footer>
+                        <button name="action_order_pay" string="确认" type="object" class="btn-primary" confirm="确认下日期及金额是否有误，提交后不可再修改！"/>
+                        <button string="取消" class="btn-default" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_account_invoice_payment_wizard" model="ir.ui.view">
+            <field name="name">发票付款</field>
+            <field name="model">account.invoice.payment.wizard</field>
+            <field name="arch" type="xml">
+                <form string="发票付款">
+                    <group>
+                        <field name="journal_id" options="{'no_create': True}" domain="[('type', 'in', ('bank', 'cash'))]"/>
+                        <field name="payment_date" />
+                        <field name="communication" />
+                    </group>
+                    <footer>
+                        <button name="action_wizard_pay" string="付款" type="object" class="btn-primary"/>
+                        <button string="取消" class="btn-default" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_account_payment_partner_customer_tree" model="ir.actions.act_window">
+            <field name="name">按客户收款</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.payment.partner</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_account_payment_partner_customer_tree"/>
+            <field name="context">{'default_partner_type': 'customer'}</field>
+            <field name="domain">[('partner_type', '=', 'customer')]</field>
+            <field name="search_view_id" ref="view_account_payment_partner_customer_search" />
+        </record>
+
+        <record id="action_app_customer_tree" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_account_payment_partner_customer_tree"/>
+            <field name="act_window_id" ref="action_account_payment_partner_customer_tree"/>
+        </record>
+        <record id="action_app_customer_form" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_account_payment_partner_customer_form"/>
+            <field name="act_window_id" ref="action_account_payment_partner_customer_tree"/>
+        </record>
+<!--        <record id="action_app_customer_search" model="ir.actions.act_window.view">-->
+<!--            <field eval="3" name="sequence"/>-->
+<!--            <field name="view_mode">search</field>-->
+<!--            <field name="view_id" ref="view_account_payment_partner_customer_search"/>-->
+<!--            <field name="act_window_id" ref="action_account_payment_partner_customer_tree"/>-->
+<!--        </record>-->
+
+        <record id="action_account_payment_partner_supplier_tree" model="ir.actions.act_window">
+            <field name="name">按供应商付款</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.payment.partner</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_account_payment_partner_supplier_tree"/>
+            <field name="context">{'default_partner_type': 'supplier'}</field>
+            <field name="domain">[('partner_type', '=', 'supplier')]</field>
+            <field name="search_view_id" ref="view_account_payment_partner_supplier_search" />
+        </record>
+
+        <record id="action_app_supplier_tree" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_account_payment_partner_supplier_tree"/>
+            <field name="act_window_id" ref="action_account_payment_partner_supplier_tree"/>
+        </record>
+        <record id="action_app_supplier_form" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_account_payment_partner_supplier_form"/>
+            <field name="act_window_id" ref="action_account_payment_partner_supplier_tree"/>
+        </record>
+<!--        <record id="action_app_supplier_search" model="ir.actions.act_window.view">-->
+<!--            <field eval="3" name="sequence"/>-->
+<!--            <field name="view_mode">search</field>-->
+<!--            <field name="view_id" ref="view_account_payment_partner_supplier_search"/>-->
+<!--            <field name="act_window_id" ref="action_account_payment_partner_supplier_tree"/>-->
+<!--        </record>-->
+
+        <menuitem action="account.action_account_payments_payable"
+                  id="menu_action_account_payments_payable_purchase"
+                  parent="purchase.menu_procurement_management"
+                  sequence="20"
+                  groups="extra_account.group_purchase_account_user"
+                  name="采购付款"/>
+        <menuitem action="action_account_payment_partner_customer_tree"
+                  name="按客户收款" id="menu_account_payment_partner_customer"
+                  sequence="20" parent="account.menu_finance_receivables"
+        />
+        <menuitem action="action_account_payment_partner_supplier_tree"
+                  name="按供应商付款" id="menu_account_payment_partner_supplier"
+                  sequence="20" parent="account.menu_finance_payables"
+        />
+
+        <menuitem action="action_account_payment_partner_supplier_tree"
+                  name="按供应商付款" id="menu_account_payment_partner_supplier_purchase"
+                  sequence="20" parent="purchase.menu_procurement_management"
+                  groups="extra_account.group_purchase_account_user"
+        />
     </data>
 </odoo>

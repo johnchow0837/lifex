@@ -31,3 +31,13 @@ class ProductTemplate(models.Model):
 
     property_valuation = fields.Selection(default='real_time')
     property_cost_method = fields.Selection(default='real')
+
+    @api.one
+    @api.depends('property_valuation', 'categ_id.property_valuation')
+    def _compute_valuation_type(self):
+        self.valuation = 'real_time'
+
+    @api.one
+    @api.depends('property_cost_method', 'categ_id.property_cost_method')
+    def _compute_cost_method(self):
+        self.cost_method = 'real'

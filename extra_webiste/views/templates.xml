@@ -13,7 +13,9 @@
 
         <template inherit_id="website.layout_footer_copyright" id="life_layout_footer_copyright" customize_show="True" name="Life Footer Copyright">
             <xpath expr="//div[@class='pull-left text-muted']/span[@t-field='res_company.name']" position="after">
-                <br/>沪ICP备20012568号
+                <br/><div style="width:300px;margin:0 auto; padding:20px 0;">
+                 <a target="_blank" href=" " style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"><img src="" style="float:left;"/><p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;">沪公网安备 31011502017981号</p ></a>
+                </div>
             </xpath>
             <xpath expr="//div[@class='pull-left text-muted']" position="attributes">
                 <attribute name="class">text-muted text-center</attribute>
